@@ -15,7 +15,7 @@ export default function ThemeSelect({ t, themeKey, setThemeKey, onContinue }: Pr
       <Sparkles className={`w-16 h-16 mx-auto mb-6 ${t.iconColor}`} />
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-4">Select a Prototype</h1>
       <p className="opacity-80 mb-8 max-w-md mx-auto">
-        Before we begin, choose which visual style you'd like to test for the Aptitude App.
+        Before we begin, choose which visual style you'd like to test for Student Paths.
       </p>
 
       <div className="flex flex-col gap-4 mb-8">
