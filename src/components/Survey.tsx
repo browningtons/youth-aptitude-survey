@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { AgeGroup, Aptitude, Question, ThemeStyles } from '../types';
 
 interface Props {
@@ -10,6 +11,20 @@ interface Props {
 
 export default function Survey({ t, currentQuestionIndex, currentQuestions, ageGroup, onAnswer }: Props) {
   const question = currentQuestions[currentQuestionIndex];
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key >= '1' && key <= '4') {
+        const idx = parseInt(key) - 1;
+        if (idx < question.options.length) {
+          onAnswer(question.options[idx].aptitude);
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [question, onAnswer]);
 
   return (
     <div className={`w-full max-w-3xl p-6 sm:p-12 ${t.card}`}>
@@ -35,12 +50,19 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
           <button
             key={idx}
             onClick={() => onAnswer(option.aptitude)}
-            className={`p-6 text-lg font-semibold text-center flex items-center justify-center min-h-[120px] ${t.buttonOption}`}
+            className={`p-6 text-lg font-semibold text-left flex items-start gap-4 min-h-[120px] relative ${t.buttonOption}`}
           >
-            {option.text}
+            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold ${t.progressBarFill} text-white`}>
+              {idx + 1}
+            </span>
+            <span>{option.text}</span>
           </button>
         ))}
       </div>
+
+      <p className="text-center mt-6 text-sm opacity-40 font-medium">
+        Press 1–4 to answer with keyboard
+      </p>
     </div>
   );
 }
