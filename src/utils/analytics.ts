@@ -18,9 +18,10 @@ export function trackCompletion(
     timestamp: new Date().toISOString()
   };
 
-  // Fire-and-forget — don't block the UI
+  // Fire-and-forget — no-cors needed for Google Apps Script redirects
   fetch(SHEETS_WEBHOOK_URL, {
     method: 'POST',
+    mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify(payload)
   }).catch(() => {
