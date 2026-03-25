@@ -34,6 +34,14 @@ export type AgeGroup = 'elementary' | 'jrHigh' | 'highSchool';
 
 export type Step = 'theme_select' | 'onboarding' | 'survey' | 'results' | 'admin';
 
+export interface AnalyticsData {
+  total: number;
+  byAptitude: Record<string, number>;
+  byTheme: Record<string, number>;
+  byAgeGroup: Record<string, number>;
+  byDate: { date: string; count: number }[];
+}
+
 export interface ThemeStyles {
   name: string;
   appBg: string;

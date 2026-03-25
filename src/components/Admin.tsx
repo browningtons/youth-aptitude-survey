@@ -1,6 +1,8 @@
-import { ArrowLeft, BookOpen, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, BookOpen, Sparkles, BarChart3 } from 'lucide-react';
 import type { Aptitude, ThemeStyles } from '../types';
 import { APTITUDE_DETAILS } from '../data/aptitudes';
+import Dashboard from './Dashboard';
 
 const HOLLAND_MAP: Record<Aptitude, string> = {
   Builder: 'Realistic',
@@ -11,21 +13,58 @@ const HOLLAND_MAP: Record<Aptitude, string> = {
   Organizer: 'Conventional'
 };
 
+type Tab = 'methodology' | 'dashboard';
+
 interface Props {
   t: ThemeStyles;
   onBack: () => void;
 }
 
 export default function Admin({ t, onBack }: Props) {
+  const [tab, setTab] = useState<Tab>('methodology');
+
   return (
     <div className={`w-full max-w-5xl p-6 sm:p-12 text-left ${t.card} relative overflow-hidden`}>
       <button
         onClick={onBack}
-        className={`mb-8 flex items-center gap-2 font-bold opacity-80 hover:opacity-100 transition-opacity ${t.accentText}`}
+        className={`mb-6 flex items-center gap-2 font-bold opacity-80 hover:opacity-100 transition-opacity ${t.accentText}`}
       >
         <ArrowLeft className="w-5 h-5" /> Back to Setup
       </button>
 
+      {/* Tab Switcher */}
+      <div className="flex gap-2 mb-8 border-b border-current/10 pb-4">
+        <button
+          onClick={() => setTab('methodology')}
+          className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${
+            tab === 'methodology'
+              ? t.buttonPrimary
+              : 'opacity-60 hover:opacity-100'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" /> Methodology
+        </button>
+        <button
+          onClick={() => setTab('dashboard')}
+          className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${
+            tab === 'dashboard'
+              ? t.buttonPrimary
+              : 'opacity-60 hover:opacity-100'
+          }`}
+        >
+          <BarChart3 className="w-4 h-4" /> Dashboard
+        </button>
+      </div>
+
+      {tab === 'methodology' && <MethodologyContent t={t} />}
+      {tab === 'dashboard' && <Dashboard t={t} />}
+    </div>
+  );
+}
+
+function MethodologyContent({ t }: { t: ThemeStyles }) {
+  return (
+    <>
       <div className="flex items-center gap-4 mb-6">
         <BookOpen className={`w-10 h-10 ${t.iconColor}`} />
         <h1 className="text-3xl sm:text-4xl font-extrabold">Methodology & Outcomes</h1>
@@ -80,6 +119,6 @@ export default function Admin({ t, onBack }: Props) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
