@@ -1,10 +1,10 @@
-import type { AgeGroup, Aptitude, Theme } from '../types';
+import type { Aptitude, Theme } from '../types';
 
 const SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL || '';
 
 export function trackCompletion(
   name: string,
-  ageGroup: AgeGroup,
+  dob: string,
   aptitude: Aptitude,
   theme: Theme
 ) {
@@ -12,7 +12,7 @@ export function trackCompletion(
 
   const payload = {
     name,
-    ageGroup,
+    dob,
     aptitude,
     theme,
     timestamp: new Date().toISOString()

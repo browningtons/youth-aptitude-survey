@@ -15,7 +15,7 @@ export function useSurvey() {
   const [themeKey, setThemeKey] = useState<Theme>(randomTheme);
   const [step, setStep] = useState<Step>('theme_select');
   const [name, setName] = useState('');
-  const [age, setAge] = useState<number | ''>('');
+  const [dob, setDob] = useState('');
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('elementary');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [scores, setScores] = useState<Record<Aptitude, number>>({ ...INITIAL_SCORES });
@@ -24,10 +24,16 @@ export function useSurvey() {
   const currentQuestions = QUESTIONS[ageGroup];
 
   const startSurvey = () => {
-    if (!name || !age) return;
-    const numAge = Number(age);
-    if (numAge <= 11) setAgeGroup('elementary');
-    else if (numAge >= 12 && numAge <= 14) setAgeGroup('jrHigh');
+    if (!name || !dob) return;
+    const today = new Date();
+    const birth = new Date(dob);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    if (age <= 11) setAgeGroup('elementary');
+    else if (age >= 12 && age <= 14) setAgeGroup('jrHigh');
     else setAgeGroup('highSchool');
     setStep('survey');
   };
@@ -44,7 +50,7 @@ export function useSurvey() {
       for (const [a, s] of Object.entries(newScores)) {
         if (s > max) { max = s; topApt = a as Aptitude; }
       }
-      trackCompletion(name, ageGroup, topApt, themeKey);
+      trackCompletion(name, dob, topApt, themeKey);
       setStep('results');
     }
   };
@@ -63,7 +69,7 @@ export function useSurvey() {
 
   const resetSurvey = () => {
     setName('');
-    setAge('');
+    setDob('');
     setCurrentQuestionIndex(0);
     setScores({ ...INITIAL_SCORES });
     setStep('onboarding');
@@ -73,7 +79,7 @@ export function useSurvey() {
     themeKey, setThemeKey,
     step, setStep,
     name, setName,
-    age, setAge,
+    dob, setDob,
     ageGroup,
     currentQuestionIndex,
     currentQuestions,

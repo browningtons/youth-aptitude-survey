@@ -5,13 +5,13 @@ interface Props {
   t: ThemeStyles;
   name: string;
   setName: (v: string) => void;
-  age: number | '';
-  setAge: (v: number | '') => void;
+  dob: string;
+  setDob: (v: string) => void;
   onStart: () => void;
   onAdmin: () => void;
 }
 
-export default function Onboarding({ t, name, setName, age, setAge, onStart, onAdmin }: Props) {
+export default function Onboarding({ t, name, setName, dob, setDob, onStart, onAdmin }: Props) {
   return (
     <div className={`w-full max-w-lg p-8 sm:p-12 text-center relative ${t.card}`}>
       <button
@@ -40,12 +40,11 @@ export default function Onboarding({ t, name, setName, age, setAge, onStart, onA
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold mb-2 opacity-90 pl-2">Age</label>
+          <label className="block text-sm font-semibold mb-2 opacity-90 pl-2">Date of Birth</label>
           <input
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value === '' ? '' : Number(e.target.value))}
-            placeholder="e.g. 14"
+            type="date"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
             className={`w-full p-4 outline-none transition-all ${t.input}`}
           />
         </div>
@@ -53,7 +52,7 @@ export default function Onboarding({ t, name, setName, age, setAge, onStart, onA
 
       <button
         onClick={onStart}
-        disabled={!name || !age}
+        disabled={!name || !dob}
         className={`w-full py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${t.buttonPrimary}`}
       >
         Start Survey <ArrowRight className="w-5 h-5" />

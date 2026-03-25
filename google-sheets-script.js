@@ -3,7 +3,7 @@
  *
  * Setup:
  * 1. Create a new Google Sheet
- * 2. Add headers in Row 1: Timestamp | Name | Age Group | Aptitude | Theme
+ * 2. Add headers in Row 1: Name | Date of Birth | Timestamp | Aptitude | Theme
  * 3. Go to Extensions > Apps Script
  * 4. Paste this code and save
  * 5. Click Deploy > New deployment > Web app
@@ -21,9 +21,9 @@ function doPost(e) {
   var data = JSON.parse(e.postData.contents);
 
   sheet.appendRow([
-    data.timestamp || new Date().toISOString(),
     data.name || '',
-    data.ageGroup || '',
+    data.dob || '',
+    data.timestamp || new Date().toISOString(),
     data.aptitude || '',
     data.theme || ''
   ]);
