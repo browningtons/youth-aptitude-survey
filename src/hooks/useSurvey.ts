@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import type { Aptitude, AgeGroup, Step, Theme } from '../types';
 import { QUESTIONS } from '../data/questions';
+import { THEMES } from '../data/themes';
+import { trackCompletion } from '../utils/analytics';
 
 const INITIAL_SCORES: Record<Aptitude, number> = {
   Builder: 0, Thinker: 0, Creator: 0, Helper: 0, Persuader: 0, Organizer: 0
 };
 
+const THEME_KEYS = Object.keys(THEMES) as Theme[];
+const randomTheme = () => THEME_KEYS[Math.floor(Math.random() * THEME_KEYS.length)];
+
 export function useSurvey() {
-  const [themeKey, setThemeKey] = useState<Theme>('glass');
+  const [themeKey, setThemeKey] = useState<Theme>(randomTheme);
   const [step, setStep] = useState<Step>('theme_select');
   const [name, setName] = useState('');
   const [age, setAge] = useState<number | ''>('');
@@ -28,10 +33,18 @@ export function useSurvey() {
   };
 
   const handleAnswer = (aptitude: Aptitude) => {
-    setScores(prev => ({ ...prev, [aptitude]: prev[aptitude] + 1 }));
+    const newScores = { ...scores, [aptitude]: scores[aptitude] + 1 };
+    setScores(newScores);
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
+      // Compute top aptitude from final scores and track completion
+      let topApt: Aptitude = 'Builder';
+      let max = -1;
+      for (const [a, s] of Object.entries(newScores)) {
+        if (s > max) { max = s; topApt = a as Aptitude; }
+      }
+      trackCompletion(name, ageGroup, topApt, themeKey);
       setStep('results');
     }
   };

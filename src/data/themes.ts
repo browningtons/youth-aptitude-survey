@@ -36,5 +36,29 @@ export const THEMES: Record<Theme, ThemeStyles> = {
     progressBarFill: 'bg-blue-600',
     accentText: 'text-blue-600',
     iconColor: 'text-blue-600'
+  },
+  sunset: {
+    name: 'Prototype 4: Sunset Warmth',
+    appBg: 'bg-gradient-to-br from-amber-50 via-orange-50 to-rose-100 text-stone-800',
+    card: 'bg-white/60 backdrop-blur-lg border border-orange-200/50 shadow-[0_8px_30px_rgba(251,146,60,0.1)] rounded-3xl',
+    input: 'bg-white/70 border-orange-200 focus:border-orange-500 focus:ring-orange-500 text-stone-800 placeholder-stone-400 rounded-2xl backdrop-blur-sm',
+    buttonPrimary: 'bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white font-bold rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5',
+    buttonOption: 'bg-white/50 hover:bg-white/80 border border-orange-200/60 hover:border-orange-400 text-stone-700 rounded-2xl transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md',
+    progressBarBg: 'bg-orange-900/10 rounded-full',
+    progressBarFill: 'bg-gradient-to-r from-orange-500 to-rose-500',
+    accentText: 'text-orange-600',
+    iconColor: 'text-orange-500'
+  },
+  forest: {
+    name: 'Prototype 5: Forest Dark',
+    appBg: 'bg-stone-950 text-emerald-50',
+    card: 'bg-stone-900 border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] rounded-2xl',
+    input: 'bg-stone-800 border-emerald-500/40 focus:border-emerald-400 focus:ring-emerald-400 text-white placeholder-stone-400 rounded-xl',
+    buttonPrimary: 'bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all',
+    buttonOption: 'bg-stone-800 hover:bg-emerald-950 border-2 border-stone-700 hover:border-emerald-500 text-emerald-50 rounded-xl transition-all duration-300',
+    progressBarBg: 'bg-stone-800 rounded-full',
+    progressBarFill: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)]',
+    accentText: 'text-emerald-400',
+    iconColor: 'text-emerald-400'
   }
 };

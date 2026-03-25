@@ -28,7 +28,7 @@ export interface AptitudeInfo {
   };
 }
 
-export type Theme = 'neon' | 'glass' | 'minimal';
+export type Theme = 'neon' | 'glass' | 'minimal' | 'sunset' | 'forest';
 
 export type AgeGroup = 'elementary' | 'jrHigh' | 'highSchool';
 

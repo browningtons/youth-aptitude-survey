@@ -4,7 +4,9 @@ import type { Theme } from '../types';
 const BG_COLORS: Record<Theme, string> = {
   neon: '#0f172a',
   glass: '#eef2ff',
-  minimal: '#ffffff'
+  minimal: '#ffffff',
+  sunset: '#fffbeb',
+  forest: '#0c0a09'
 };
 
 export async function handleDownload(
