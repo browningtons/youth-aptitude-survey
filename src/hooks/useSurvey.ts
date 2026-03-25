@@ -11,6 +11,15 @@ const INITIAL_SCORES: Record<Aptitude, number> = {
 const THEME_KEYS = Object.keys(THEMES) as Theme[];
 const randomTheme = () => THEME_KEYS[Math.floor(Math.random() * THEME_KEYS.length)];
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export function useSurvey() {
   const [themeKey, setThemeKey] = useState<Theme>(randomTheme);
   const [step, setStep] = useState<Step>('theme_select');
@@ -20,8 +29,9 @@ export function useSurvey() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [scores, setScores] = useState<Record<Aptitude, number>>({ ...INITIAL_SCORES });
   const [isDownloading, setIsDownloading] = useState(false);
+  const [shuffledQuestions, setShuffledQuestions] = useState(QUESTIONS['elementary']);
 
-  const currentQuestions = QUESTIONS[ageGroup];
+  const currentQuestions = shuffledQuestions;
 
   const startSurvey = () => {
     if (!name || !dob) return;
@@ -32,9 +42,18 @@ export function useSurvey() {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
-    if (age <= 11) setAgeGroup('elementary');
-    else if (age >= 12 && age <= 14) setAgeGroup('jrHigh');
-    else setAgeGroup('highSchool');
+    let group: AgeGroup;
+    if (age <= 11) group = 'elementary';
+    else if (age >= 12 && age <= 14) group = 'jrHigh';
+    else group = 'highSchool';
+    setAgeGroup(group);
+    // Shuffle question order and option order within each question
+    setShuffledQuestions(
+      shuffle(QUESTIONS[group]).map(q => ({
+        ...q,
+        options: shuffle(q.options)
+      }))
+    );
     setStep('survey');
   };
 
@@ -72,6 +91,7 @@ export function useSurvey() {
     setDob('');
     setCurrentQuestionIndex(0);
     setScores({ ...INITIAL_SCORES });
+    setShuffledQuestions(QUESTIONS['elementary']);
     setStep('onboarding');
   };
 
