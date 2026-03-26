@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { AgeGroup, Aptitude, Question, ThemeStyles } from '../types';
+import { useI18n } from '../i18n';
 
 interface Props {
   t: ThemeStyles;
@@ -10,7 +11,13 @@ interface Props {
 }
 
 export default function Survey({ t, currentQuestionIndex, currentQuestions, ageGroup, onAnswer }: Props) {
+  const { t: tr } = useI18n();
   const question = currentQuestions[currentQuestionIndex];
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [currentQuestionIndex]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -26,33 +33,40 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
     return () => window.removeEventListener('keydown', handler);
   }, [question, onAnswer]);
 
+  const questionLabel = tr('survey.questionOf')
+    .replace('{current}', String(currentQuestionIndex + 1))
+    .replace('{total}', String(currentQuestions.length));
+
+  const ageLabel = tr(`survey.ageGroup.${ageGroup}`);
+
   return (
-    <div className={`w-full max-w-3xl p-6 sm:p-12 ${t.card}`}>
+    <section className={`w-full max-w-3xl p-6 sm:p-12 ${t.card}`} role="form" aria-label={questionLabel}>
       <div className="flex justify-between items-center mb-6">
-        <span className="font-semibold opacity-70">Question {currentQuestionIndex + 1} of {currentQuestions.length}</span>
+        <span className="font-semibold opacity-70" aria-live="polite">{questionLabel}</span>
         <span className={`font-bold px-3 py-1 rounded-full text-sm ${t.progressBarBg} ${t.accentText}`}>
-          {ageGroup === 'elementary' ? 'Elementary' : ageGroup === 'jrHigh' ? 'Jr. High' : 'High School'}
+          {ageLabel}
         </span>
       </div>
-      <div className={`w-full h-3 mb-10 overflow-hidden ${t.progressBarBg}`}>
+      <div className={`w-full h-3 mb-10 overflow-hidden ${t.progressBarBg}`} role="progressbar" aria-valuenow={currentQuestionIndex + 1} aria-valuemin={1} aria-valuemax={currentQuestions.length} aria-label={questionLabel}>
         <div
           className={`h-full transition-all duration-500 ease-out ${t.progressBarFill}`}
           style={{ width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%` }}
         />
       </div>
 
-      <h2 className="text-2xl sm:text-3xl font-extrabold mb-8 text-center leading-tight">
+      <h2 ref={headingRef} tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold mb-8 text-center leading-tight outline-none">
         {question.text}
       </h2>
 
-      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6" role="group" aria-label={tr('survey.keyboardHint')}>
         {question.options.map((option, idx) => (
           <button
             key={idx}
             onClick={() => onAnswer(option.aptitude)}
-            className={`p-6 text-lg font-semibold text-left flex items-start gap-4 min-h-[120px] relative ${t.buttonOption}`}
+            className={`p-6 text-lg font-semibold text-left flex items-start gap-4 min-h-[120px] relative focus:ring-2 focus:ring-current focus:ring-offset-2 ${t.buttonOption}`}
+            aria-label={`${idx + 1}: ${option.text}`}
           >
-            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold ${t.progressBarFill} text-white`}>
+            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold ${t.progressBarFill} text-white`} aria-hidden="true">
               {idx + 1}
             </span>
             <span>{option.text}</span>
@@ -60,9 +74,9 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
         ))}
       </div>
 
-      <p className="text-center mt-6 text-sm opacity-40 font-medium">
-        Press 1–4 to answer with keyboard
+      <p className="text-center mt-6 text-sm opacity-40 font-medium" aria-hidden="true">
+        {tr('survey.keyboardHint')}
       </p>
-    </div>
+    </section>
   );
 }

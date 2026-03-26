@@ -1,0 +1,127 @@
+const en: Record<string, string> = {
+  // App
+  "app.title": "Student Paths",
+  "app.skipToContent": "Skip to main content",
+
+  // Theme Select
+  "theme.title": "Select a Prototype",
+  "theme.subtitle": "Before we begin, choose which visual style you'd like to test for Student Paths.",
+  "theme.confirm": "Confirm & Continue",
+
+  // Onboarding
+  "onboarding.title": "Discover Your Path",
+  "onboarding.subtitle": "Let's find out what kind of thinker you are.",
+  "onboarding.nameLabel": "First Name",
+  "onboarding.namePlaceholder": "e.g. Alex",
+  "onboarding.dobLabel": "Date of Birth",
+  "onboarding.start": "Start Survey",
+  "onboarding.admin": "Admin",
+
+  // Survey
+  "survey.questionOf": "Question {current} of {total}",
+  "survey.ageGroup.elementary": "Elementary",
+  "survey.ageGroup.jrHigh": "Jr. High",
+  "survey.ageGroup.highSchool": "High School",
+  "survey.keyboardHint": "Press 1–4 to answer with keyboard",
+
+  // Results
+  "results.complete": "Survey Complete",
+  "results.greeting": "Awesome job, {name}!",
+  "results.subtitle": "Here's your complete aptitude breakdown:",
+  "results.scoreBreakdown": "Your Score Breakdown",
+  "results.primaryLabel": "Primary Aptitude",
+  "results.secondaryLabel": "Secondary Aptitude",
+  "results.whoYouAre": "Who You Are",
+  "results.actionPlan": "Your Action Plan",
+  "results.careerPaths": "Future Career Paths",
+  "results.coursesLabel": "Core Degree Courses & Skills",
+  "results.courseCol": "Course",
+  "results.conceptCol": "Concept / Skill",
+  "results.forElementary": "For Elementary Students:",
+  "results.forJrHigh": "For Middle Schoolers:",
+  "results.forHighSchool": "For High Schoolers:",
+  "results.retake": "Retake",
+  "results.image": "Image",
+  "results.saving": "Saving...",
+  "results.pdf": "PDF",
+  "results.share": "Share",
+  "results.copied": "Copied!",
+  "results.scanToShare": "Scan to Share",
+  "results.scanCaption": "Scan this code to view these results",
+
+  // Admin
+  "admin.back": "Back to Setup",
+  "admin.methodology": "Methodology",
+  "admin.dashboard": "Dashboard",
+  "admin.methodologyTitle": "Methodology & Outcomes",
+  "admin.methodologyP1": "This aptitude survey is structurally inspired by the Holland Occupational Themes (RIASEC), a widely respected theory of careers and vocational choice based upon personality types. It posits that people are best suited to work environments that match their inherent preferences and problem-solving styles.",
+  "admin.methodologyP2": "To make the survey highly engaging and accessible for students across elementary, junior high, and high school, the core psychological categories have been adapted into six intuitive \"Aptitude Profiles\". The algorithm asks 15 dynamically age-adjusted questions, forcing choices between four distinct behavioral paths, ultimately calculating a dominant aptitude.",
+  "admin.outcomesTitle": "The 6 Possible Outcomes",
+  "admin.hollandEquivalent": "Holland Equivalent",
+  "admin.coreStrengths": "Core Strengths",
+
+  // Dashboard
+  "dashboard.loading": "Loading analytics...",
+  "dashboard.noData": "No analytics data available",
+  "dashboard.noDataDesc": "Set VITE_SHEETS_WEBHOOK_URL to enable tracking.",
+  "dashboard.connectError": "Could not connect to the data source.",
+  "dashboard.retry": "Retry",
+  "dashboard.totalSubmissions": "Total Submissions",
+  "dashboard.topAptitude": "Top Aptitude",
+  "dashboard.mostUsedTheme": "Most Used Theme",
+  "dashboard.aptitudeDistribution": "Aptitude Distribution",
+  "dashboard.ageGroupBreakdown": "Age Group Breakdown",
+  "dashboard.submissionsOverTime": "Submissions Over Time",
+  "dashboard.themeDistribution": "Theme Distribution",
+
+  // Aptitudes
+  "aptitude.Builder": "The Builder",
+  "aptitude.Thinker": "The Thinker",
+  "aptitude.Creator": "The Creator",
+  "aptitude.Helper": "The Helper",
+  "aptitude.Persuader": "The Persuader",
+  "aptitude.Organizer": "The Organizer",
+
+  "aptitude.Builder.desc": "You are a practical, hands-on problem solver. You enjoy working with tools, machinery, plants, or animals. Instead of just talking about theories, you prefer to take action and love seeing tangible, real-world results from your hard work.",
+  "aptitude.Thinker.desc": "You are driven by curiosity and a deep desire to understand how the world works. You love analyzing data, solving complex puzzles, and conducting research. You are logical, precise, and enjoy intellectual challenges more than anything else.",
+  "aptitude.Creator.desc": "You are highly expressive, original, and independent. You see the world as a canvas and love bringing new ideas to life through art, writing, music, performance, or design. You value freedom and creativity over strict rules and routines.",
+  "aptitude.Helper.desc": "You are deeply empathetic and thrive on supporting, teaching, and healing others. You are an excellent communicator who values human connection. Your ultimate goal is usually making a positive, lasting impact on your community and the people around you.",
+  "aptitude.Persuader.desc": "You are a natural-born leader and motivator. You enjoy taking risks, starting new projects, and persuading others to achieve a shared goal. You are confident, energetic, and thrive in fast-paced environments where you can take charge.",
+  "aptitude.Organizer.desc": "You are the glue that holds systems together. You value order, accuracy, and predictability. You are incredibly detail-oriented and excel at managing data, creating routines, and coordinating complex logistics that keep everything running smoothly.",
+
+  // Strengths
+  "strength.Practicality": "Practicality",
+  "strength.Mechanical Ability": "Mechanical Ability",
+  "strength.Physical Coordination": "Physical Coordination",
+  "strength.Problem Solving": "Problem Solving",
+  "strength.Analytical Thinking": "Analytical Thinking",
+  "strength.Observation Skills": "Observation Skills",
+  "strength.Logic": "Logic",
+  "strength.Scientific Reasoning": "Scientific Reasoning",
+  "strength.Imagination": "Imagination",
+  "strength.Innovation": "Innovation",
+  "strength.Self-Expression": "Self-Expression",
+  "strength.Adaptability": "Adaptability",
+  "strength.Empathy": "Empathy",
+  "strength.Communication": "Communication",
+  "strength.Patience": "Patience",
+  "strength.Teamwork": "Teamwork",
+  "strength.Leadership": "Leadership",
+  "strength.Public Speaking": "Public Speaking",
+  "strength.Negotiation": "Negotiation",
+  "strength.Self-Confidence": "Self-Confidence",
+  "strength.Organization": "Organization",
+  "strength.Attention to Detail": "Attention to Detail",
+  "strength.Reliability": "Reliability",
+  "strength.Time Management": "Time Management",
+
+  // Holland mappings
+  "holland.Builder": "Realistic",
+  "holland.Thinker": "Investigative",
+  "holland.Creator": "Artistic",
+  "holland.Helper": "Social",
+  "holland.Persuader": "Enterprising",
+  "holland.Organizer": "Conventional",
+};
+
+export default en;

@@ -12,56 +12,63 @@ export default function App() {
 
   return (
     <div className={`min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 transition-colors duration-500 ${t.appBg}`}>
-      {survey.step === 'theme_select' && (
-        <ThemeSelect
-          t={t}
-          themeKey={survey.themeKey}
-          setThemeKey={survey.setThemeKey}
-          onContinue={() => survey.setStep('onboarding')}
-        />
-      )}
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded">
+        Skip to main content
+      </a>
 
-      {survey.step === 'onboarding' && (
-        <Onboarding
-          t={t}
-          name={survey.name}
-          setName={survey.setName}
-          dob={survey.dob}
-          setDob={survey.setDob}
-          onStart={survey.startSurvey}
-          onAdmin={() => survey.setStep('admin')}
-        />
-      )}
+      <main id="main-content">
+        {survey.step === 'theme_select' && (
+          <ThemeSelect
+            t={t}
+            themeKey={survey.themeKey}
+            setThemeKey={survey.setThemeKey}
+            onContinue={() => survey.setStep('onboarding')}
+          />
+        )}
 
-      {survey.step === 'survey' && survey.currentQuestions.length > 0 && (
-        <Survey
-          t={t}
-          currentQuestionIndex={survey.currentQuestionIndex}
-          currentQuestions={survey.currentQuestions}
-          ageGroup={survey.ageGroup}
-          onAnswer={survey.handleAnswer}
-        />
-      )}
+        {survey.step === 'onboarding' && (
+          <Onboarding
+            t={t}
+            name={survey.name}
+            setName={survey.setName}
+            dob={survey.dob}
+            setDob={survey.setDob}
+            onStart={survey.startSurvey}
+            onAdmin={() => survey.setStep('admin')}
+          />
+        )}
 
-      {survey.step === 'results' && (
-        <Results
-          t={t}
-          themeKey={survey.themeKey}
-          name={survey.name}
-          ageGroup={survey.ageGroup}
-          getTopAptitude={survey.getTopAptitude}
-          isDownloading={survey.isDownloading}
-          setIsDownloading={survey.setIsDownloading}
-          onReset={survey.resetSurvey}
-        />
-      )}
+        {survey.step === 'survey' && survey.currentQuestions.length > 0 && (
+          <Survey
+            t={t}
+            currentQuestionIndex={survey.currentQuestionIndex}
+            currentQuestions={survey.currentQuestions}
+            ageGroup={survey.ageGroup}
+            onAnswer={survey.handleAnswer}
+          />
+        )}
 
-      {survey.step === 'admin' && (
-        <Admin
-          t={t}
-          onBack={() => survey.setStep('onboarding')}
-        />
-      )}
+        {survey.step === 'results' && (
+          <Results
+            t={t}
+            themeKey={survey.themeKey}
+            name={survey.name}
+            ageGroup={survey.ageGroup}
+            getRankedAptitudes={survey.getRankedAptitudes}
+            getShareableURL={survey.getShareableURL}
+            isDownloading={survey.isDownloading}
+            setIsDownloading={survey.setIsDownloading}
+            onReset={survey.resetSurvey}
+          />
+        )}
+
+        {survey.step === 'admin' && (
+          <Admin
+            t={t}
+            onBack={() => survey.setStep('onboarding')}
+          />
+        )}
+      </main>
     </div>
   );
 }

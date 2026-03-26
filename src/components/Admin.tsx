@@ -3,15 +3,7 @@ import { ArrowLeft, BookOpen, Sparkles, BarChart3 } from 'lucide-react';
 import type { Aptitude, ThemeStyles } from '../types';
 import { APTITUDE_DETAILS } from '../data/aptitudes';
 import Dashboard from './Dashboard';
-
-const HOLLAND_MAP: Record<Aptitude, string> = {
-  Builder: 'Realistic',
-  Thinker: 'Investigative',
-  Creator: 'Artistic',
-  Helper: 'Social',
-  Persuader: 'Enterprising',
-  Organizer: 'Conventional'
-};
+import { useI18n } from '../i18n';
 
 type Tab = 'methodology' | 'dashboard';
 
@@ -21,65 +13,67 @@ interface Props {
 }
 
 export default function Admin({ t, onBack }: Props) {
+  const { t: tr } = useI18n();
   const [tab, setTab] = useState<Tab>('methodology');
 
   return (
-    <div className={`w-full max-w-5xl p-6 sm:p-12 text-left ${t.card} relative overflow-hidden`}>
-      <button
-        onClick={onBack}
-        className={`mb-6 flex items-center gap-2 font-bold opacity-80 hover:opacity-100 transition-opacity ${t.accentText}`}
-      >
-        <ArrowLeft className="w-5 h-5" /> Back to Setup
-      </button>
+    <section className={`w-full max-w-5xl p-6 sm:p-12 text-left ${t.card} relative overflow-hidden`} aria-label={tr('admin.methodologyTitle')}>
+      <nav>
+        <button
+          onClick={onBack}
+          className={`mb-6 flex items-center gap-2 font-bold opacity-80 hover:opacity-100 transition-opacity focus:ring-2 focus:ring-current focus:ring-offset-2 rounded ${t.accentText}`}
+        >
+          <ArrowLeft className="w-5 h-5" aria-hidden="true" /> {tr('admin.back')}
+        </button>
 
-      {/* Tab Switcher */}
-      <div className="flex gap-2 mb-8 border-b border-current/10 pb-4">
-        <button
-          onClick={() => setTab('methodology')}
-          className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${
-            tab === 'methodology'
-              ? t.buttonPrimary
-              : 'opacity-60 hover:opacity-100'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" /> Methodology
-        </button>
-        <button
-          onClick={() => setTab('dashboard')}
-          className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${
-            tab === 'dashboard'
-              ? t.buttonPrimary
-              : 'opacity-60 hover:opacity-100'
-          }`}
-        >
-          <BarChart3 className="w-4 h-4" /> Dashboard
-        </button>
+        <div className="flex gap-2 mb-8 border-b border-current/10 pb-4" role="tablist">
+          <button
+            onClick={() => setTab('methodology')}
+            role="tab"
+            aria-selected={tab === 'methodology'}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all focus:ring-2 focus:ring-current focus:ring-offset-2 ${
+              tab === 'methodology' ? t.buttonPrimary : 'opacity-60 hover:opacity-100'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" aria-hidden="true" /> {tr('admin.methodology')}
+          </button>
+          <button
+            onClick={() => setTab('dashboard')}
+            role="tab"
+            aria-selected={tab === 'dashboard'}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all focus:ring-2 focus:ring-current focus:ring-offset-2 ${
+              tab === 'dashboard' ? t.buttonPrimary : 'opacity-60 hover:opacity-100'
+            }`}
+          >
+            <BarChart3 className="w-4 h-4" aria-hidden="true" /> {tr('admin.dashboard')}
+          </button>
+        </div>
+      </nav>
+
+      <div role="tabpanel">
+        {tab === 'methodology' && <MethodologyContent t={t} />}
+        {tab === 'dashboard' && <Dashboard t={t} />}
       </div>
-
-      {tab === 'methodology' && <MethodologyContent t={t} />}
-      {tab === 'dashboard' && <Dashboard t={t} />}
-    </div>
+    </section>
   );
 }
 
 function MethodologyContent({ t }: { t: ThemeStyles }) {
+  const { t: tr } = useI18n();
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
-        <BookOpen className={`w-10 h-10 ${t.iconColor}`} />
-        <h1 className="text-3xl sm:text-4xl font-extrabold">Methodology & Outcomes</h1>
+        <BookOpen className={`w-10 h-10 ${t.iconColor}`} aria-hidden="true" />
+        <h1 className="text-3xl sm:text-4xl font-extrabold">{tr('admin.methodologyTitle')}</h1>
       </div>
 
       <div className="prose prose-lg max-w-none opacity-90 mb-12">
-        <p className="mb-4">
-          This aptitude survey is structurally inspired by the <strong>Holland Occupational Themes (RIASEC)</strong>, a widely respected theory of careers and vocational choice based upon personality types. It posits that people are best suited to work environments that match their inherent preferences and problem-solving styles.
-        </p>
-        <p>
-          To make the survey highly engaging and accessible for students across elementary, junior high, and high school, the core psychological categories have been adapted into six intuitive "Aptitude Profiles". The algorithm asks 15 dynamically age-adjusted questions, forcing choices between four distinct behavioral paths, ultimately calculating a dominant aptitude.
-        </p>
+        <p className="mb-4">{tr('admin.methodologyP1')}</p>
+        <p>{tr('admin.methodologyP2')}</p>
       </div>
 
-      <h2 className="text-2xl font-bold mb-6 border-b border-current/10 pb-4">The 6 Possible Outcomes</h2>
+      <h2 className="text-2xl font-bold mb-6 border-b border-current/10 pb-4">{tr('admin.outcomesTitle')}</h2>
 
       <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
         {(Object.keys(APTITUDE_DETAILS) as Aptitude[]).map((key) => {
@@ -89,28 +83,28 @@ function MethodologyContent({ t }: { t: ThemeStyles }) {
             <div key={key} className="p-6 rounded-3xl border border-current/10 bg-current/5 flex flex-col h-full hover:bg-current/10 transition-colors">
               <div className="flex items-center gap-4 mb-4">
                 <div className={`p-4 rounded-2xl ${t.progressBarBg}`}>
-                  <Icon className={`w-8 h-8 ${t.iconColor}`} />
+                  <Icon className={`w-8 h-8 ${t.iconColor}`} aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className={`text-2xl font-extrabold ${t.accentText}`}>{apt.name}</h3>
+                  <h3 className={`text-2xl font-extrabold ${t.accentText}`}>{tr(`aptitude.${key}`)}</h3>
                   <p className="text-sm font-semibold opacity-60 uppercase tracking-wider">
-                    Holland Equivalent: {HOLLAND_MAP[key]}
+                    {tr('admin.hollandEquivalent')}: {tr(`holland.${key}`)}
                   </p>
                 </div>
               </div>
 
               <p className="opacity-80 mb-6 flex-grow leading-relaxed">
-                {apt.description}
+                {tr(`aptitude.${key}.desc`)}
               </p>
 
               <div className="mt-auto">
                 <h4 className="font-bold text-sm uppercase tracking-wide opacity-70 mb-3 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" /> Core Strengths
+                  <Sparkles className="w-4 h-4" aria-hidden="true" /> {tr('admin.coreStrengths')}
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {apt.strengths.map((str, idx) => (
                     <span key={idx} className="px-3 py-1 text-sm font-semibold rounded-full border border-current/10 bg-white/50 dark:bg-black/20 opacity-90">
-                      {str}
+                      {tr(`strength.${str}`)}
                     </span>
                   ))}
                 </div>

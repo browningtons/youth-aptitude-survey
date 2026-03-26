@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Aptitude, AgeGroup, Step, Theme } from '../types';
 import { QUESTIONS } from '../data/questions';
 import { THEMES } from '../data/themes';
@@ -20,6 +20,11 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+export interface RankedAptitude {
+  aptitude: Aptitude;
+  score: number;
+}
+
 export function useSurvey() {
   const [themeKey, setThemeKey] = useState<Theme>(randomTheme);
   const [step, setStep] = useState<Step>('theme_select');
@@ -32,6 +37,26 @@ export function useSurvey() {
   const [shuffledQuestions, setShuffledQuestions] = useState(QUESTIONS['elementary']);
 
   const currentQuestions = shuffledQuestions;
+
+  // Check for shared results in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shared = params.get('r');
+    if (shared) {
+      try {
+        const decoded = JSON.parse(atob(shared));
+        if (decoded.scores && decoded.name && decoded.ageGroup && decoded.themeKey) {
+          setScores(decoded.scores);
+          setName(decoded.name);
+          setAgeGroup(decoded.ageGroup);
+          setThemeKey(decoded.themeKey);
+          setStep('results');
+        }
+      } catch {
+        // Invalid shared link, ignore
+      }
+    }
+  }, []);
 
   const startSurvey = () => {
     if (!name || !dob) return;
@@ -47,7 +72,6 @@ export function useSurvey() {
     else if (age >= 12 && age <= 14) group = 'jrHigh';
     else group = 'highSchool';
     setAgeGroup(group);
-    // Shuffle question order and option order within each question
     setShuffledQuestions(
       shuffle(QUESTIONS[group]).map(q => ({
         ...q,
@@ -63,7 +87,6 @@ export function useSurvey() {
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Compute top aptitude from final scores and track completion
       let topApt: Aptitude = 'Builder';
       let max = -1;
       for (const [a, s] of Object.entries(newScores)) {
@@ -74,16 +97,17 @@ export function useSurvey() {
     }
   };
 
-  const getTopAptitude = (): Aptitude => {
-    let topAptitude: Aptitude = 'Builder';
-    let maxScore = -1;
-    for (const [aptitude, score] of Object.entries(scores)) {
-      if (score > maxScore) {
-        maxScore = score;
-        topAptitude = aptitude as Aptitude;
-      }
-    }
-    return topAptitude;
+  const getRankedAptitudes = (): RankedAptitude[] => {
+    return (Object.entries(scores) as [Aptitude, number][])
+      .map(([aptitude, score]) => ({ aptitude, score }))
+      .sort((a, b) => b.score - a.score);
+  };
+
+  const getShareableURL = (): string => {
+    const data = { scores, name, ageGroup, themeKey };
+    const encoded = btoa(JSON.stringify(data));
+    const base = window.location.origin + window.location.pathname;
+    return `${base}?r=${encoded}`;
   };
 
   const resetSurvey = () => {
@@ -92,6 +116,8 @@ export function useSurvey() {
     setCurrentQuestionIndex(0);
     setScores({ ...INITIAL_SCORES });
     setShuffledQuestions(QUESTIONS['elementary']);
+    // Clear URL params
+    window.history.replaceState({}, '', window.location.pathname);
     setStep('onboarding');
   };
 
@@ -107,7 +133,8 @@ export function useSurvey() {
     isDownloading, setIsDownloading,
     startSurvey,
     handleAnswer,
-    getTopAptitude,
+    getRankedAptitudes,
+    getShareableURL,
     resetSurvey,
   };
 }

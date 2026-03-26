@@ -6,19 +6,16 @@ import {
 import { RefreshCcw } from 'lucide-react';
 import type { AnalyticsData, ThemeStyles } from '../types';
 import { fetchAnalytics } from '../utils/fetchAnalytics';
+import { useI18n } from '../i18n';
 
 const CHART_COLORS = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'];
-const AGE_GROUP_LABELS: Record<string, string> = {
-  elementary: 'Elementary',
-  jrHigh: 'Jr. High',
-  highSchool: 'High School'
-};
 
 interface Props {
   t: ThemeStyles;
 }
 
 export default function Dashboard({ t }: Props) {
+  const { t: tr } = useI18n();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -41,7 +38,7 @@ export default function Dashboard({ t }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
         <RefreshCcw className={`w-8 h-8 animate-spin ${t.iconColor}`} />
-        <p className="opacity-60 font-medium">Loading analytics...</p>
+        <p className="opacity-60 font-medium">{tr('dashboard.loading')}</p>
       </div>
     );
   }
@@ -49,13 +46,13 @@ export default function Dashboard({ t }: Props) {
   if (error || !data) {
     return (
       <div className="text-center py-20">
-        <p className="text-lg font-semibold opacity-70 mb-2">No analytics data available</p>
+        <p className="text-lg font-semibold opacity-70 mb-2">{tr('dashboard.noData')}</p>
         <p className="opacity-50 text-sm mb-6">
-          {error ? 'Could not connect to the data source.' : 'Set VITE_SHEETS_WEBHOOK_URL to enable tracking.'}
+          {error ? tr('dashboard.connectError') : tr('dashboard.noDataDesc')}
         </p>
         {error && (
           <button onClick={loadData} className={`px-6 py-2 text-sm font-bold ${t.buttonPrimary}`}>
-            Retry
+            {tr('dashboard.retry')}
           </button>
         )}
       </div>
@@ -65,8 +62,13 @@ export default function Dashboard({ t }: Props) {
   // Prepare chart data
   const aptitudeData = Object.entries(data.byAptitude).map(([name, value]) => ({ name, value }));
   const themeData = Object.entries(data.byTheme).map(([name, value]) => ({ name, value }));
+  const ageGroupLabels: Record<string, string> = {
+    elementary: tr('survey.ageGroup.elementary'),
+    jrHigh: tr('survey.ageGroup.jrHigh'),
+    highSchool: tr('survey.ageGroup.highSchool')
+  };
   const ageData = Object.entries(data.byAgeGroup).map(([key, value]) => ({
-    name: AGE_GROUP_LABELS[key] || key,
+    name: ageGroupLabels[key] || key,
     value
   }));
   const timeData = data.byDate.map(d => ({ date: d.date, count: d.count }));
@@ -83,14 +85,14 @@ export default function Dashboard({ t }: Props) {
     <div className="space-y-8">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard t={t} label="Total Submissions" value={String(data.total)} />
-        <StatCard t={t} label="Top Aptitude" value={topAptitude} />
-        <StatCard t={t} label="Most Used Theme" value={topTheme} />
+        <StatCard t={t} label={tr('dashboard.totalSubmissions')} value={String(data.total)} />
+        <StatCard t={t} label={tr('dashboard.topAptitude')} value={topAptitude} />
+        <StatCard t={t} label={tr('dashboard.mostUsedTheme')} value={topTheme} />
       </div>
 
       {/* Aptitude + Theme Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ChartCard t={t} title="Aptitude Distribution">
+        <ChartCard t={t} title={tr('dashboard.aptitudeDistribution')}>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={aptitudeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
@@ -106,7 +108,7 @@ export default function Dashboard({ t }: Props) {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard t={t} title="Age Group Breakdown">
+        <ChartCard t={t} title={tr('dashboard.ageGroupBreakdown')}>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
@@ -131,7 +133,7 @@ export default function Dashboard({ t }: Props) {
 
       {/* Timeline + Theme bar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ChartCard t={t} title="Submissions Over Time">
+        <ChartCard t={t} title={tr('dashboard.submissionsOverTime')}>
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={timeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
@@ -143,7 +145,7 @@ export default function Dashboard({ t }: Props) {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard t={t} title="Theme Distribution">
+        <ChartCard t={t} title={tr('dashboard.themeDistribution')}>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={themeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />

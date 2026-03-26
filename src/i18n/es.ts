@@ -1,0 +1,127 @@
+const es: Record<string, string> = {
+  // App
+  "app.title": "Caminos Estudiantiles",
+  "app.skipToContent": "Ir al contenido principal",
+
+  // Theme Select
+  "theme.title": "Selecciona un Prototipo",
+  "theme.subtitle": "Antes de comenzar, elige el estilo visual que te gustaría probar para Caminos Estudiantiles.",
+  "theme.confirm": "Confirmar y Continuar",
+
+  // Onboarding
+  "onboarding.title": "Descubre Tu Camino",
+  "onboarding.subtitle": "Vamos a descubrir qué tipo de pensador eres.",
+  "onboarding.nameLabel": "Nombre",
+  "onboarding.namePlaceholder": "ej. Alejandro",
+  "onboarding.dobLabel": "Fecha de Nacimiento",
+  "onboarding.start": "Comenzar Encuesta",
+  "onboarding.admin": "Admin",
+
+  // Survey
+  "survey.questionOf": "Pregunta {current} de {total}",
+  "survey.ageGroup.elementary": "Primaria",
+  "survey.ageGroup.jrHigh": "Secundaria",
+  "survey.ageGroup.highSchool": "Preparatoria",
+  "survey.keyboardHint": "Presiona 1–4 para responder con el teclado",
+
+  // Results
+  "results.complete": "Encuesta Completa",
+  "results.greeting": "¡Excelente trabajo, {name}!",
+  "results.subtitle": "Aquí está tu desglose completo de aptitudes:",
+  "results.scoreBreakdown": "Tu Desglose de Puntaje",
+  "results.primaryLabel": "Aptitud Principal",
+  "results.secondaryLabel": "Aptitud Secundaria",
+  "results.whoYouAre": "Quién Eres",
+  "results.actionPlan": "Tu Plan de Acción",
+  "results.careerPaths": "Carreras Futuras",
+  "results.coursesLabel": "Cursos y Habilidades Clave",
+  "results.courseCol": "Curso",
+  "results.conceptCol": "Concepto / Habilidad",
+  "results.forElementary": "Para Estudiantes de Primaria:",
+  "results.forJrHigh": "Para Estudiantes de Secundaria:",
+  "results.forHighSchool": "Para Estudiantes de Preparatoria:",
+  "results.retake": "Repetir",
+  "results.image": "Imagen",
+  "results.saving": "Guardando...",
+  "results.pdf": "PDF",
+  "results.share": "Compartir",
+  "results.copied": "¡Copiado!",
+  "results.scanToShare": "Escanear para Compartir",
+  "results.scanCaption": "Escanea este código para ver estos resultados",
+
+  // Admin
+  "admin.back": "Volver al Inicio",
+  "admin.methodology": "Metodología",
+  "admin.dashboard": "Panel de Control",
+  "admin.methodologyTitle": "Metodología y Resultados",
+  "admin.methodologyP1": "Esta encuesta de aptitudes está inspirada estructuralmente en los Temas Ocupacionales de Holland (RIASEC), una teoría ampliamente respetada sobre carreras y elección vocacional basada en tipos de personalidad. Propone que las personas son más adecuadas para entornos de trabajo que coinciden con sus preferencias inherentes y estilos de resolución de problemas.",
+  "admin.methodologyP2": "Para hacer la encuesta altamente atractiva y accesible para estudiantes de primaria, secundaria y preparatoria, las categorías psicológicas centrales se han adaptado en seis \"Perfiles de Aptitud\" intuitivos. El algoritmo hace 15 preguntas dinámicamente ajustadas por edad, forzando elecciones entre cuatro caminos conductuales distintos, calculando finalmente una aptitud dominante.",
+  "admin.outcomesTitle": "Los 6 Resultados Posibles",
+  "admin.hollandEquivalent": "Equivalente Holland",
+  "admin.coreStrengths": "Fortalezas Clave",
+
+  // Dashboard
+  "dashboard.loading": "Cargando análisis...",
+  "dashboard.noData": "No hay datos de análisis disponibles",
+  "dashboard.noDataDesc": "Configura VITE_SHEETS_WEBHOOK_URL para habilitar el seguimiento.",
+  "dashboard.connectError": "No se pudo conectar con la fuente de datos.",
+  "dashboard.retry": "Reintentar",
+  "dashboard.totalSubmissions": "Total de Envíos",
+  "dashboard.topAptitude": "Aptitud Principal",
+  "dashboard.mostUsedTheme": "Tema Más Usado",
+  "dashboard.aptitudeDistribution": "Distribución de Aptitudes",
+  "dashboard.ageGroupBreakdown": "Desglose por Edad",
+  "dashboard.submissionsOverTime": "Envíos a lo Largo del Tiempo",
+  "dashboard.themeDistribution": "Distribución de Temas",
+
+  // Aptitudes
+  "aptitude.Builder": "El Constructor",
+  "aptitude.Thinker": "El Pensador",
+  "aptitude.Creator": "El Creador",
+  "aptitude.Helper": "El Ayudante",
+  "aptitude.Persuader": "El Persuasor",
+  "aptitude.Organizer": "El Organizador",
+
+  "aptitude.Builder.desc": "Eres un solucionador de problemas práctico y activo. Disfrutas trabajar con herramientas, maquinaria, plantas o animales. En lugar de solo hablar de teorías, prefieres actuar y te encanta ver resultados tangibles y reales de tu arduo trabajo.",
+  "aptitude.Thinker.desc": "Te impulsa la curiosidad y un profundo deseo de entender cómo funciona el mundo. Te encanta analizar datos, resolver rompecabezas complejos e investigar. Eres lógico, preciso y disfrutas los desafíos intelectuales más que cualquier otra cosa.",
+  "aptitude.Creator.desc": "Eres altamente expresivo, original e independiente. Ves el mundo como un lienzo y te encanta dar vida a nuevas ideas a través del arte, la escritura, la música, la actuación o el diseño. Valoras la libertad y la creatividad por encima de las reglas estrictas y las rutinas.",
+  "aptitude.Helper.desc": "Eres profundamente empático y prosperas apoyando, enseñando y sanando a otros. Eres un excelente comunicador que valora la conexión humana. Tu objetivo final generalmente es tener un impacto positivo y duradero en tu comunidad y las personas que te rodean.",
+  "aptitude.Persuader.desc": "Eres un líder y motivador nato. Disfrutas tomar riesgos, iniciar nuevos proyectos y persuadir a otros para lograr un objetivo compartido. Eres seguro, enérgico y prosperas en entornos de ritmo rápido donde puedes tomar el mando.",
+  "aptitude.Organizer.desc": "Eres el pegamento que mantiene los sistemas unidos. Valoras el orden, la precisión y la previsibilidad. Eres increíblemente detallista y sobresales en la gestión de datos, la creación de rutinas y la coordinación de logística compleja que mantiene todo funcionando sin problemas.",
+
+  // Strengths
+  "strength.Practicality": "Practicidad",
+  "strength.Mechanical Ability": "Habilidad Mecánica",
+  "strength.Physical Coordination": "Coordinación Física",
+  "strength.Problem Solving": "Resolución de Problemas",
+  "strength.Analytical Thinking": "Pensamiento Analítico",
+  "strength.Observation Skills": "Habilidades de Observación",
+  "strength.Logic": "Lógica",
+  "strength.Scientific Reasoning": "Razonamiento Científico",
+  "strength.Imagination": "Imaginación",
+  "strength.Innovation": "Innovación",
+  "strength.Self-Expression": "Autoexpresión",
+  "strength.Adaptability": "Adaptabilidad",
+  "strength.Empathy": "Empatía",
+  "strength.Communication": "Comunicación",
+  "strength.Patience": "Paciencia",
+  "strength.Teamwork": "Trabajo en Equipo",
+  "strength.Leadership": "Liderazgo",
+  "strength.Public Speaking": "Oratoria",
+  "strength.Negotiation": "Negociación",
+  "strength.Self-Confidence": "Autoconfianza",
+  "strength.Organization": "Organización",
+  "strength.Attention to Detail": "Atención al Detalle",
+  "strength.Reliability": "Confiabilidad",
+  "strength.Time Management": "Gestión del Tiempo",
+
+  // Holland mappings
+  "holland.Builder": "Realista",
+  "holland.Thinker": "Investigador",
+  "holland.Creator": "Artístico",
+  "holland.Helper": "Social",
+  "holland.Persuader": "Emprendedor",
+  "holland.Organizer": "Convencional",
+};
+
+export default es;
