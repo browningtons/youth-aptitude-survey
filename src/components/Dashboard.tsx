@@ -1,14 +1,32 @@
 import { useState, useEffect } from 'react';
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { RefreshCcw } from 'lucide-react';
-import type { AnalyticsData, ThemeStyles } from '../types';
+import { RefreshCcw, TrendingUp, Trophy, Palette, Users } from 'lucide-react';
+import type { Aptitude, AnalyticsData, ThemeStyles } from '../types';
 import { fetchAnalytics } from '../utils/fetchAnalytics';
 import { useI18n } from '../i18n';
 
-const CHART_COLORS = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'];
+const APTITUDE_COLORS: Record<string, string> = {
+  Builder: '#f59e0b',
+  Thinker: '#6366f1',
+  Creator: '#ec4899',
+  Helper: '#10b981',
+  Persuader: '#ef4444',
+  Organizer: '#06b6d4'
+};
+
+const THEME_COLORS: Record<string, string> = {
+  neon: '#a855f7',
+  glass: '#6366f1',
+  minimal: '#64748b',
+  sunset: '#f97316',
+  forest: '#22c55e'
+};
+
+const ALL_APTITUDES: Aptitude[] = ['Builder', 'Thinker', 'Creator', 'Helper', 'Persuader', 'Organizer'];
 
 interface Props {
   t: ThemeStyles;
@@ -59,8 +77,16 @@ export default function Dashboard({ t }: Props) {
     );
   }
 
-  // Prepare chart data
-  const aptitudeData = Object.entries(data.byAptitude).map(([name, value]) => ({ name, value }));
+  // Prepare chart data — ensure all 6 aptitudes always appear
+  const aptitudeData = ALL_APTITUDES.map(name => ({
+    name,
+    value: data.byAptitude[name] || 0
+  }));
+  const totalAptitudeVotes = aptitudeData.reduce((sum, d) => sum + d.value, 0) || 1;
+
+  // Sort for leaderboard
+  const aptitudeLeaderboard = [...aptitudeData].sort((a, b) => b.value - a.value);
+
   const themeData = Object.entries(data.byTheme).map(([name, value]) => ({ name, value }));
   const ageGroupLabels: Record<string, string> = {
     elementary: tr('survey.ageGroup.elementary'),
@@ -74,9 +100,7 @@ export default function Dashboard({ t }: Props) {
   const timeData = data.byDate.map(d => ({ date: d.date, count: d.count }));
 
   // Stat helpers
-  const topAptitude = aptitudeData.length > 0
-    ? aptitudeData.reduce((a, b) => a.value > b.value ? a : b).name
-    : '—';
+  const topAptitude = aptitudeLeaderboard.length > 0 ? aptitudeLeaderboard[0].name : '—';
   const topTheme = themeData.length > 0
     ? themeData.reduce((a, b) => a.value > b.value ? a : b).name
     : '—';
@@ -85,29 +109,63 @@ export default function Dashboard({ t }: Props) {
     <div className="space-y-8">
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard t={t} label={tr('dashboard.totalSubmissions')} value={String(data.total)} />
-        <StatCard t={t} label={tr('dashboard.topAptitude')} value={topAptitude} />
-        <StatCard t={t} label={tr('dashboard.mostUsedTheme')} value={topTheme} />
+        <StatCard t={t} label={tr('dashboard.totalSubmissions')} value={String(data.total)} icon={<Users className="w-5 h-5" />} />
+        <StatCard t={t} label={tr('dashboard.topAptitude')} value={topAptitude} icon={<Trophy className="w-5 h-5" />} color={APTITUDE_COLORS[topAptitude]} />
+        <StatCard t={t} label={tr('dashboard.mostUsedTheme')} value={topTheme} icon={<Palette className="w-5 h-5" />} color={THEME_COLORS[topTheme]} />
       </div>
 
-      {/* Aptitude + Theme Charts */}
+      {/* Aptitude Leaderboard + Radar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Leaderboard */}
         <ChartCard t={t} title={tr('dashboard.aptitudeDistribution')}>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={aptitudeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Bar dataKey="value" name="Count" radius={[6, 6, 0, 0]}>
-                {aptitudeData.map((_, i) => (
-                  <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="space-y-3">
+            {aptitudeLeaderboard.map((item, idx) => {
+              const pct = Math.round((item.value / totalAptitudeVotes) * 100);
+              const color = APTITUDE_COLORS[item.name] || '#6366f1';
+              return (
+                <div key={item.name} className="flex items-center gap-3">
+                  <span className="w-5 text-center font-extrabold text-xs opacity-40">{idx + 1}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-sm">{item.name}</span>
+                      <span className="text-xs font-bold opacity-60">{item.value} ({pct}%)</span>
+                    </div>
+                    <div className="w-full h-3 rounded-full bg-current/10 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${pct}%`, backgroundColor: color }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </ChartCard>
 
+        {/* Radar Chart */}
+        <ChartCard t={t} title={tr('dashboard.aptitudeRadar')}>
+          <ResponsiveContainer width="100%" height={280}>
+            <RadarChart data={aptitudeData} cx="50%" cy="50%" outerRadius="70%">
+              <PolarGrid strokeDasharray="3 3" opacity={0.2} />
+              <PolarAngleAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 600 }} />
+              <PolarRadiusAxis allowDecimals={false} tick={{ fontSize: 10 }} />
+              <Radar
+                name="Aptitude"
+                dataKey="value"
+                stroke="#6366f1"
+                fill="#6366f1"
+                fillOpacity={0.25}
+                strokeWidth={2}
+              />
+              <Tooltip />
+            </RadarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
+
+      {/* Age Group + Theme */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ChartCard t={t} title={tr('dashboard.ageGroupBreakdown')}>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
@@ -117,11 +175,38 @@ export default function Dashboard({ t }: Props) {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
+                innerRadius={50}
                 outerRadius={100}
+                paddingAngle={3}
                 label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
               >
                 {ageData.map((_, i) => (
-                  <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                  <Cell key={i} fill={['#6366f1', '#06b6d4', '#f59e0b'][i % 3]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartCard>
+
+        {/* Theme Distribution — Donut with theme colors */}
+        <ChartCard t={t} title={tr('dashboard.themeDistribution')}>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart>
+              <Pie
+                data={themeData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={100}
+                paddingAngle={3}
+                label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+              >
+                {themeData.map((entry) => (
+                  <Cell key={entry.name} fill={THEME_COLORS[entry.name] || '#6366f1'} />
                 ))}
               </Pie>
               <Tooltip />
@@ -131,45 +216,35 @@ export default function Dashboard({ t }: Props) {
         </ChartCard>
       </div>
 
-      {/* Timeline + Theme bar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ChartCard t={t} title={tr('dashboard.submissionsOverTime')}>
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={timeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} dot={{ r: 4 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard t={t} title={tr('dashboard.themeDistribution')}>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={themeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Bar dataKey="value" name="Count" radius={[6, 6, 0, 0]}>
-                {themeData.map((_, i) => (
-                  <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-      </div>
+      {/* Timeline */}
+      <ChartCard t={t} title={tr('dashboard.submissionsOverTime')}>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={timeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+            <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+            <Tooltip />
+            <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={3} dot={{ r: 5, strokeWidth: 2 }} activeDot={{ r: 7 }} />
+          </LineChart>
+        </ResponsiveContainer>
+        <div className="flex items-center gap-2 mt-3 text-xs opacity-50 font-medium">
+          <TrendingUp className="w-3.5 h-3.5" /> {data.total} total across {timeData.length} day{timeData.length !== 1 ? 's' : ''}
+        </div>
+      </ChartCard>
     </div>
   );
 }
 
-function StatCard({ t, label, value }: { t: ThemeStyles; label: string; value: string }) {
+function StatCard({ t, label, value, icon, color }: { t: ThemeStyles; label: string; value: string; icon: React.ReactNode; color?: string }) {
   return (
     <div className={`p-6 rounded-2xl border border-current/10 bg-current/5 text-center`}>
-      <p className="text-sm font-bold uppercase tracking-wider opacity-50 mb-2">{label}</p>
-      <p className={`text-3xl font-extrabold ${t.accentText}`}>{value}</p>
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <span className={`opacity-50 ${t.iconColor}`}>{icon}</span>
+        <p className="text-xs font-bold uppercase tracking-wider opacity-50">{label}</p>
+      </div>
+      <p className={`text-3xl font-extrabold`} style={color ? { color } : undefined}>
+        <span className={color ? '' : t.accentText}>{value}</span>
+      </p>
     </div>
   );
 }
