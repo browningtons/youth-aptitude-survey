@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Rocket, Sparkles, RefreshCcw, Download, Share2, QrCode, FileText } from 'lucide-react';
+import { User, Rocket, Sparkles, RefreshCcw, Download, Share2, QrCode, FileText, BookOpen, Users, Zap, Compass } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import type { AgeGroup, Aptitude, Theme, ThemeStyles } from '../types';
 import type { RankedAptitude } from '../hooks/useSurvey';
@@ -123,23 +123,79 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
 
             {/* Action Plan + Careers */}
             <div className="grid md:grid-cols-12 gap-8">
-              <section className="md:col-span-6 rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5" aria-label="Action plan">
-                <h3 className="text-xl font-bold mb-2 opacity-90 flex items-center gap-2">
-                  <Rocket className="w-5 h-5" aria-hidden="true" /> {tr('results.actionPlan')}
-                </h3>
-                <p className="text-sm opacity-60 mb-6 font-bold uppercase tracking-wider">
-                  {ageGroup === 'elementary' ? tr('results.forElementary') : ageGroup === 'jrHigh' ? tr('results.forJrHigh') : tr('results.forHighSchool')}
-                </p>
-                <ol className="space-y-5">
-                  {primaryInfo.nextSteps[ageGroup].map((step, idx) => (
-                    <li key={idx} className="flex items-start gap-4 opacity-90 font-medium">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-sm shadow-sm ${t.progressBarFill}`} aria-hidden="true">
-                        {idx + 1}
-                      </div>
-                      <span className="leading-snug pt-0.5">{step}</span>
-                    </li>
-                  ))}
-                </ol>
+              <section className="md:col-span-6 rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5 space-y-8" aria-label="Action plan">
+                <div>
+                  <h3 className="text-xl font-bold mb-2 opacity-90 flex items-center gap-2">
+                    <Rocket className="w-5 h-5" aria-hidden="true" /> {tr('results.actionPlan')}
+                  </h3>
+                  <p className="text-sm opacity-60 font-bold uppercase tracking-wider">
+                    {ageGroup === 'elementary' ? tr('results.forElementary') : ageGroup === 'jrHigh' ? tr('results.forJrHigh') : tr('results.forHighSchool')}
+                  </p>
+                </div>
+
+                {/* Books to Read */}
+                <div>
+                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" aria-hidden="true" /> {tr('results.booksToRead')}
+                  </h4>
+                  <ul className="space-y-3">
+                    {primaryInfo.nextSteps[ageGroup].books.map((book, idx) => (
+                      <li key={idx} className="opacity-90">
+                        <p className="font-bold text-sm">{book.title}</p>
+                        <p className="text-xs opacity-70 mt-0.5">{book.why}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* People to Look Up */}
+                <div>
+                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4" aria-hidden="true" /> {tr('results.peopleToLookUp')}
+                  </h4>
+                  <ul className="space-y-3">
+                    {primaryInfo.nextSteps[ageGroup].people.map((person, idx) => (
+                      <li key={idx} className="opacity-90">
+                        <p className="font-bold text-sm">{person.name}</p>
+                        <p className="text-xs opacity-70 mt-0.5">{person.why}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Activities to Try */}
+                <div>
+                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                    <Zap className="w-4 h-4" aria-hidden="true" /> {tr('results.activitiesToTry')}
+                  </h4>
+                  <ul className="space-y-2">
+                    {primaryInfo.nextSteps[ageGroup].activities.map((activity, idx) => (
+                      <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
+                          {idx + 1}
+                        </div>
+                        <span className="leading-snug">{activity}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Interests to Explore */}
+                <div>
+                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                    <Compass className="w-4 h-4" aria-hidden="true" /> {tr('results.interestsToExplore')}
+                  </h4>
+                  <ul className="space-y-2">
+                    {primaryInfo.nextSteps[ageGroup].interests.map((interest, idx) => (
+                      <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
+                          {idx + 1}
+                        </div>
+                        <span className="leading-snug">{interest}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </section>
 
               <section className="md:col-span-6 rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5" aria-label="Career paths">

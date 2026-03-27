@@ -76,9 +76,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Focus on introductory math, measurement, and spatial reasoning classes", "Participate in hands-on STEM and physical science labs", "Take introductory coding and physical computing (like micro:bit)"],
-      jrHigh: ["Enroll in pre-algebra, geometry, and earth science courses", "Take Shop, Computer-Aided Design (CAD), or introductory drafting electives", "Study basic physics and structural principles in science class"],
-      highSchool: ["Take AP Physics and advanced Calculus tracks", "Pursue a B.S. in Mechanical Engineering, Civil Engineering, or Construction Management", "Obtain OSHA certification or complete a vocational trade apprenticeship"]
+      elementary: {
+        books: [
+          { title: "Rosie Revere, Engineer by Andrea Beaty", why: "A girl who loves building inventions learns that failure is part of the process" },
+          { title: "The Most Magnificent Thing by Ashley Spires", why: "Shows how persistence and tinkering lead to creating something great" }
+        ],
+        people: [
+          { name: "Simone Biles", why: "Shows how physical coordination and hard work produce incredible results" },
+          { name: "Steve Irwin", why: "Loved animals and nature, spent his life working hands-on with wildlife" }
+        ],
+        activities: [
+          "Build something with LEGO Technic or K'NEX — follow the instructions, then design your own",
+          "Start a small garden or take care of a class pet to practice responsibility",
+          "Take apart an old broken appliance (with an adult) to see how the pieces fit together"
+        ],
+        interests: [
+          "Watch Mark Rober on YouTube — he builds incredible contraptions and explains the engineering",
+          "Try Minecraft in survival mode — you have to gather resources and build structures to survive",
+          "Visit a local farm, construction site (from outside), or nature center on the weekend"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "The Boy Who Harnessed the Wind by William Kamkwamba", why: "A teen in Malawi built a windmill from scrap to save his village — true story" },
+          { title: "Hatchet by Gary Paulsen", why: "A boy survives alone in the wilderness using only his hands and brain" }
+        ],
+        people: [
+          { name: "Elon Musk", why: "Started building rockets and electric cars by thinking about problems differently" },
+          { name: "Temple Grandin", why: "Revolutionized livestock handling by thinking visually and building better systems" }
+        ],
+        activities: [
+          "Join a robotics club (FIRST Robotics or VEX) — you'll build, wire, and program real machines",
+          "Learn basic woodworking or metalworking through a community shop class",
+          "Volunteer with Habitat for Humanity or help on a family DIY home project"
+        ],
+        interests: [
+          "Learn to 3D print — many libraries have free printers you can use with Tinkercad designs",
+          "Watch Practical Engineering on YouTube — explains how bridges, dams, and roads actually work",
+          "Try soldering a simple electronics kit (like a flashlight or radio) from a hobby store"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "Structures: Or Why Things Don't Fall Down by J.E. Gordon", why: "Fascinating look at how everything from bridges to bones stays together" },
+          { title: "Shop Class as Soulcraft by Matthew Crawford", why: "Makes the case that working with your hands is deeply fulfilling and intellectually rich" }
+        ],
+        people: [
+          { name: "Boyan Slat", why: "Started The Ocean Cleanup at age 18 — engineered a system to remove plastic from the ocean" },
+          { name: "Lonnie Johnson", why: "NASA engineer who also invented the Super Soaker — creativity meets engineering" }
+        ],
+        activities: [
+          "Get a paid apprenticeship or summer job in construction, auto repair, or landscaping",
+          "Build a personal project: a go-kart, a trebuchet, a piece of furniture, or an Arduino-powered gadget",
+          "Shadow a professional engineer, electrician, or mechanic for a day"
+        ],
+        interests: [
+          "Take free courses on Khan Academy in physics and engineering principles",
+          "Watch Stuff Made Here on YouTube — a former engineer builds wild inventions in his garage",
+          "Explore CAD software like Fusion 360 (free for students) — design parts you can actually 3D print"
+        ]
+      }
     }
   },
   Thinker: {
@@ -155,9 +212,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Focus on advanced math sequencing and reading comprehension", "Participate in accelerated science and experimental method programs", "Take introductory logic, coding, or critical thinking electives"],
-      jrHigh: ["Enroll in advanced life sciences, chemistry, and pre-algebra courses", "Take introductory computer science and algorithmic thinking classes", "Participate in academic decathlons, Science Olympiad, or math competitions"],
-      highSchool: ["Take AP Chemistry, AP Biology, and AP Computer Science A", "Plan for a B.S. in Computer Science, Physics, Data Science, or Pre-Med", "Apply for university-sponsored high school research fellowships"]
+      elementary: {
+        books: [
+          { title: "Ada Twist, Scientist by Andrea Beaty", why: "A curious girl who never stops asking 'Why?' — just like you" },
+          { title: "Hidden Figures (Young Readers' Edition) by Margot Lee Shetterly", why: "True story of brilliant women mathematicians who helped send astronauts to space" }
+        ],
+        people: [
+          { name: "Marie Curie", why: "Discovered radioactivity through relentless curiosity and experimentation" },
+          { name: "Neil deGrasse Tyson", why: "Makes the biggest mysteries of the universe fun and understandable" }
+        ],
+        activities: [
+          "Start a science journal — observe something in nature every day and write or draw what you notice",
+          "Do kitchen experiments: make volcanoes, grow crystals, test which liquids freeze fastest",
+          "Join a math league or Science Olympiad team at school"
+        ],
+        interests: [
+          "Watch SciShow Kids or National Geographic Kids on YouTube for real science you can understand",
+          "Play logic puzzle games like Rush Hour, SET, or Mastermind",
+          "Visit a science museum or planetarium — ask the staff your hardest questions"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "A Short History of Nearly Everything by Bill Bryson", why: "Makes all of science — from atoms to the universe — surprisingly entertaining" },
+          { title: "The Martian by Andy Weir", why: "An astronaut uses chemistry, physics, and botany to survive alone on Mars" }
+        ],
+        people: [
+          { name: "Jane Goodall", why: "Spent decades patiently observing chimpanzees — turned observation into world-changing science" },
+          { name: "Terence Tao", why: "One of the greatest living mathematicians — was solving university math problems as a teenager" }
+        ],
+        activities: [
+          "Learn Python with free resources like Codecademy or Scratch — start automating things that interest you",
+          "Enter a science fair with an original hypothesis you actually want to test",
+          "Start a weather station, ant farm, or plant growth experiment and track data over weeks"
+        ],
+        interests: [
+          "Watch Veritasium or 3Blue1Brown on YouTube — they make complex math and physics visual and exciting",
+          "Try Brilliant.org puzzles for logic, math, and science problem-solving",
+          "Listen to the Radiolab podcast — explores wild scientific questions in story form"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "Thinking, Fast and Slow by Daniel Kahneman", why: "Reveals how your brain actually makes decisions — full of surprising research" },
+          { title: "The Gene by Siddhartha Mukherjee", why: "Epic story of genetics from Mendel to CRISPR — reads like a thriller" }
+        ],
+        people: [
+          { name: "Katalin Karikó", why: "Spent 40 years on mRNA research that everyone ignored — until it saved millions of lives as the COVID vaccine" },
+          { name: "Richard Feynman", why: "Nobel-winning physicist famous for explaining the hardest ideas simply and playfully" }
+        ],
+        activities: [
+          "Reach out to a local university professor and ask to shadow their lab for a day",
+          "Build a real data project: scrape weather data, sports stats, or census data and find patterns",
+          "Compete in AMC/MATHCOUNTS, Science Olympiad, or a hackathon"
+        ],
+        interests: [
+          "Take free MIT OpenCourseWare or Coursera courses in subjects that fascinate you",
+          "Watch Two Minute Papers on YouTube — covers cutting-edge AI and physics research",
+          "Read scientific preprints on arXiv.org in a field you're curious about — even if you only understand half of it"
+        ]
+      }
     }
   },
   Creator: {
@@ -234,9 +348,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Take foundational art, music, and creative writing classes", "Study basic color theory, composition, and spatial relationships", "Focus on language arts, vocabulary, and storytelling structures"],
-      jrHigh: ["Enroll in digital media, graphic design, or photography electives", "Take advanced English literature and creative composition courses", "Study art history and fundamental design principles"],
-      highSchool: ["Take AP Studio Art, AP Art History, or AP Music Theory", "Prepare a professional portfolio for a B.F.A in Design, Architecture, or Fine Arts", "Secure internships at design agencies, marketing firms, or media production companies"]
+      elementary: {
+        books: [
+          { title: "The Dot by Peter H. Reynolds", why: "A girl who thinks she can't draw discovers that creativity starts with one small mark" },
+          { title: "Crenshaw by Katherine Applegate", why: "A beautifully imaginative story about a boy and his giant invisible cat friend" }
+        ],
+        people: [
+          { name: "Walt Disney", why: "Started drawing cartoons as a kid — built an empire from his imagination" },
+          { name: "Misty Copeland", why: "Didn't start ballet until age 13 and became a principal dancer through creative dedication" }
+        ],
+        activities: [
+          "Keep a sketchbook or creative journal — draw, doodle, write stories, paste in things that inspire you",
+          "Put on a play, puppet show, or talent show with friends or family",
+          "Try a new art form every month: watercolors, clay, collage, photography with a phone"
+        ],
+        interests: [
+          "Watch Art for Kids Hub on YouTube — guided drawing sessions you can follow along with",
+          "Play creative sandbox games like Minecraft Creative Mode or Roblox Studio",
+          "Visit a local art gallery or mural walk — take photos of pieces that make you feel something"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "Steal Like an Artist by Austin Kleon", why: "Short, visual book about how all creative people learn by remixing ideas" },
+          { title: "The Hobbit by J.R.R. Tolkien", why: "One of the most imaginative worlds ever created — shows what storytelling can do" }
+        ],
+        people: [
+          { name: "Hayao Miyazaki", why: "Japanese animator who hand-draws entire films — proof that patience + vision = magic" },
+          { name: "Billie Eilish", why: "Created a completely original musical identity as a teenager from her bedroom" }
+        ],
+        activities: [
+          "Learn a digital tool: Procreate for drawing, GarageBand for music, Canva for design, or CapCut for video",
+          "Write and illustrate a short comic book or zine and share it with friends",
+          "Join a school drama club, art club, band, or start a creative YouTube/TikTok channel"
+        ],
+        interests: [
+          "Watch Nerdwriter1 or Every Frame a Painting on YouTube — they break down why great art works",
+          "Try Blender (free 3D software) — follow a beginner donut tutorial and make your first 3D scene",
+          "Start noticing design everywhere: logos, movie posters, album covers, app interfaces — ask yourself why they work"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "The War of Art by Steven Pressfield", why: "About overcoming creative resistance — every artist, writer, and designer needs this" },
+          { title: "Ways of Seeing by John Berger", why: "Changes how you look at visual culture, advertising, and art forever" }
+        ],
+        people: [
+          { name: "Virgil Abloh", why: "Architect turned fashion designer who became creative director of Louis Vuitton — blurred every boundary" },
+          { name: "Ava DuVernay", why: "Self-taught filmmaker who became one of Hollywood's most important directors" }
+        ],
+        activities: [
+          "Build a portfolio: collect your 10 best pieces of any medium and present them on a free site like Behance",
+          "Enter a creative competition: Scholastic Art & Writing Awards, film festivals, or design challenges",
+          "Collaborate with someone in a different medium — if you draw, find a musician; if you write, find a filmmaker"
+        ],
+        interests: [
+          "Take free design courses on Skillshare or watch The Futur on YouTube for design career advice",
+          "Study the creative process of someone you admire — read interviews, watch documentaries about how they work",
+          "Explore generative AI tools like Midjourney or Runway as creative collaborators, not replacements"
+        ]
+      }
     }
   },
   Helper: {
@@ -313,9 +484,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Focus on reading comprehension, social studies, and communication skills", "Participate in peer mediation or conflict resolution training programs", "Take introductory health, wellness, and community studies classes"],
-      jrHigh: ["Enroll in psychology, sociology, or human development electives", "Take advanced communication, foreign language, and public speaking courses", "Participate in community-based service learning or peer-tutoring classes"],
-      highSchool: ["Take AP Psychology, AP Sociology, and Anatomy/Physiology", "Plan for a B.S. or B.A. in Nursing, Social Work, Psychology, or Education", "Complete clinical shadowing hours or obtain a CNA (Certified Nursing Assistant) license"]
+      elementary: {
+        books: [
+          { title: "Each Kindness by Jacqueline Woodson", why: "A powerful story about the impact of small acts of kindness — and what happens when we miss the chance" },
+          { title: "Wonder by R.J. Palacio", why: "Shows how empathy and acceptance can change an entire school community" }
+        ],
+        people: [
+          { name: "Mr. Rogers", why: "Spent his life teaching children they are special exactly as they are" },
+          { name: "Ruby Bridges", why: "At just 6 years old, showed incredible bravery standing up for what's right" }
+        ],
+        activities: [
+          "Volunteer to be a reading buddy or peer tutor for younger students",
+          "Help organize a food drive, toy drive, or supply collection for a local shelter",
+          "Practice active listening: ask a friend about their day and really focus on understanding how they feel"
+        ],
+        interests: [
+          "Watch Dodo Kids on YouTube — heartwarming animal rescue and kindness stories",
+          "Start a kindness journal — write down one nice thing you did or noticed each day",
+          "Learn basic sign language from YouTube — it helps you communicate with more people"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "The Boy Who Was Raised as a Dog by Bruce Perry", why: "A child psychiatrist shares true stories about how childhood experiences shape who we become" },
+          { title: "I Am Malala (Young Readers' Edition) by Malala Yousafzai", why: "A teenager who risked her life fighting for every child's right to education" }
+        ],
+        people: [
+          { name: "Dolly Parton", why: "Built a free book program that has given over 200 million books to children worldwide" },
+          { name: "Patch Adams", why: "A doctor who believes laughter and human connection heal as much as medicine" }
+        ],
+        activities: [
+          "Become a mentor or tutor through a school or community program",
+          "Volunteer at an animal shelter, senior center, or children's hospital",
+          "Start or join a student council, anti-bullying campaign, or peer mediation program"
+        ],
+        interests: [
+          "Watch TED Talks by Brené Brown on vulnerability and human connection",
+          "Take a free online course on psychology basics from Khan Academy",
+          "Listen to The Happiness Lab podcast — uses research to explain what actually makes people feel better"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "Man's Search for Meaning by Viktor Frankl", why: "A psychologist's account of finding purpose in the hardest circumstances imaginable" },
+          { title: "Educated by Tara Westover", why: "A memoir about the transformative power of education and self-advocacy" }
+        ],
+        people: [
+          { name: "Paul Farmer", why: "Doctor who devoted his career to providing healthcare to the world's poorest communities" },
+          { name: "Bryan Stevenson", why: "Lawyer who fights for wrongly imprisoned people — founded the Equal Justice Initiative" }
+        ],
+        activities: [
+          "Shadow a nurse, therapist, social worker, or teacher for a day to see the work firsthand",
+          "Get CPR/First Aid certified through the Red Cross — it's practical and looks great on applications",
+          "Lead a community service project: organize a tutoring program, wellness event, or mentoring circle"
+        ],
+        interests: [
+          "Watch the documentary 'Paper Tigers' — about a school that transformed by understanding trauma",
+          "Explore Coursera's free courses in psychology, public health, or social work",
+          "Read about different therapy approaches (CBT, DBT, art therapy) to see which resonates with you"
+        ]
+      }
     }
   },
   Persuader: {
@@ -392,9 +620,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Take public speaking, debate, and presentation skills classes", "Study foundational social studies, civics, and early history", "Participate in group leadership and collaborative project management activities"],
-      jrHigh: ["Enroll in debate, mock trial, or speech communications electives", "Take introductory business, economics, or student leadership courses", "Study advanced history, government, and persuasive writing"],
-      highSchool: ["Take AP Macroeconomics, AP Microeconomics, and AP Government", "Prepare for a degree in Business Administration, Pre-Law, Finance, or Marketing", "Pursue internships in corporate sales, political campaigns, or business management"]
+      elementary: {
+        books: [
+          { title: "Kid President's Guide to Being Awesome by Robby Novak", why: "Written by a kid who inspired millions — shows that young people can lead right now" },
+          { title: "The Lemonade War by Jacqueline Davies", why: "Two siblings compete to sell the most lemonade — teaches business, strategy, and persuasion" }
+        ],
+        people: [
+          { name: "Kid President (Robby Novak)", why: "A kid who made viral videos inspiring millions of adults to be better" },
+          { name: "Greta Thunberg", why: "Started speaking up about climate change at age 15 — showed that one voice can move the world" }
+        ],
+        activities: [
+          "Run for a class officer position or volunteer to lead a group project",
+          "Start a small business: lemonade stand, craft sale, or bake sale — practice pitching to customers",
+          "Organize a class debate or persuasive speech contest with friends"
+        ],
+        interests: [
+          "Watch Shark Tank (kid-friendly episodes) — see how entrepreneurs pitch and negotiate",
+          "Play strategy board games like Monopoly, Risk, or Settlers of Catan",
+          "Practice telling stories out loud — great leaders are great storytellers"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "How to Win Friends and Influence People (Teen Edition) by Dale Carnegie", why: "The classic guide to building relationships and persuading people — adapted for teens" },
+          { title: "Start Something That Matters by Blake Mycoskie", why: "How the founder of TOMS Shoes turned a simple idea into a global movement" }
+        ],
+        people: [
+          { name: "Oprah Winfrey", why: "Built a media empire from nothing through authenticity, communication, and relentless drive" },
+          { name: "Mark Cuban", why: "Sold garbage bags door-to-door as a kid — now owns NBA teams and invests in startups" }
+        ],
+        activities: [
+          "Join a debate team, mock trial club, or Model United Nations",
+          "Start a real micro-business: resell items, offer services like lawn care or tutoring, or sell something you make",
+          "Organize a school event, fundraiser, or awareness campaign from scratch"
+        ],
+        interests: [
+          "Watch How I Built This podcast/YouTube — founders tell the real story of how they started their companies",
+          "Follow entrepreneurs your age on social media — many teens are already building businesses",
+          "Study how ads work: pick 5 commercials and figure out exactly what psychological trick each one uses"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "Influence by Robert Cialdini", why: "The science of persuasion — six principles that explain why people say yes" },
+          { title: "Shoe Dog by Phil Knight", why: "The founder of Nike tells the raw, honest story of building a global brand from scratch" }
+        ],
+        people: [
+          { name: "Alexandria Ocasio-Cortez", why: "Won a congressional race at 29 with no political connections — pure grassroots persuasion" },
+          { name: "Sara Blakely", why: "Invented Spanx with $5,000 and no business experience — became the youngest self-made female billionaire" }
+        ],
+        activities: [
+          "Launch a real side business or freelance service and track your revenue",
+          "Intern at a marketing agency, law office, political campaign, or local business",
+          "Lead a club, team, or organization — practice managing people, budgets, and deadlines"
+        ],
+        interests: [
+          "Take a free Coursera course on negotiation from Yale or marketing from Wharton",
+          "Read the business section of a major newspaper every week — understand what moves markets",
+          "Listen to The Tim Ferriss Show podcast — interviews with world-class performers across every field"
+        ]
+      }
     }
   },
   Organizer: {
@@ -471,9 +756,66 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
       }
     ],
     nextSteps: {
-      elementary: ["Focus heavily on arithmetic, data sorting, and grammar mechanics", "Take introductory computer literacy, typing, and software application classes", "Participate in structured logic, coding logic, and organizational activities"],
-      jrHigh: ["Enroll in pre-algebra, statistics, and data literacy electives", "Take advanced computer applications (spreadsheets/databases) courses", "Study introductory accounting, record-keeping, or library sciences"],
-      highSchool: ["Take AP Statistics, AP Computer Science Principles, and Accounting courses", "Plan for a degree in Accounting, Finance, Information Systems, or Business Analytics", "Obtain technical certifications in Excel, SQL, or basic project management (e.g., CAPM)"]
+      elementary: {
+        books: [
+          { title: "If You Give a Mouse a Cookie by Laura Numeroff", why: "A fun chain-reaction story that shows how one thing leads to another — systems thinking for kids" },
+          { title: "The Checklist Manifesto (adapted concept) by Atul Gawande", why: "Shows how simple checklists save lives in hospitals and cockpits — organization matters" }
+        ],
+        people: [
+          { name: "Marie Kondo", why: "Turned organizing into a worldwide movement — proves that order creates calm and joy" },
+          { name: "Katherine Johnson", why: "NASA mathematician whose precise calculations helped land astronauts on the Moon" }
+        ],
+        activities: [
+          "Organize your room, desk, or backpack with a real system — label everything and keep it up for a month",
+          "Create a weekly planner or calendar and track your homework, activities, and goals",
+          "Help a teacher organize the classroom library, supply closet, or bulletin board"
+        ],
+        interests: [
+          "Try coding with Scratch — programming is literally giving a computer organized, step-by-step instructions",
+          "Play puzzle games that reward planning: Sudoku, chess, or flow-style puzzle apps",
+          "Start a collection (cards, rocks, coins, stamps) and build a real catalog or inventory system for it"
+        ]
+      },
+      jrHigh: {
+        books: [
+          { title: "Atomic Habits by James Clear", why: "Explains how tiny organized routines compound into massive results over time" },
+          { title: "The Phantom Tollbooth by Norton Juster", why: "An adventure through a world where numbers, words, and logic rule — perfect for organized thinkers" }
+        ],
+        people: [
+          { name: "Tim Cook", why: "Apple's CEO isn't a flashy inventor — he's the operations genius who makes everything run on time" },
+          { name: "Reshma Saujani", why: "Founded Girls Who Code by creating organized systems to teach millions of girls to program" }
+        ],
+        activities: [
+          "Learn to use a spreadsheet (Google Sheets or Excel) — track something real like spending, grades, or workout progress",
+          "Manage a club's budget, schedule, or event logistics as the treasurer or secretary",
+          "Create a personal website or digital portfolio — organizing content teaches information architecture"
+        ],
+        interests: [
+          "Learn basic SQL or Python with free resources — databases are the ultimate organizational tool",
+          "Watch Ali Abdaal on YouTube — he's built an entire brand around productivity systems and organization",
+          "Try Notion or Trello to build a personal productivity system for school and extracurriculars"
+        ]
+      },
+      highSchool: {
+        books: [
+          { title: "Thinking in Systems by Donella Meadows", why: "The definitive guide to understanding how complex systems work — from ecosystems to economies" },
+          { title: "The Goal by Eliyahu Goldratt", why: "A business novel about optimizing a factory — surprisingly gripping and teaches operations management" }
+        ],
+        people: [
+          { name: "Sheryl Sandberg", why: "COO of Meta — the operational mastermind behind one of the world's largest companies" },
+          { name: "Grace Hopper", why: "Pioneer of computer programming who literally helped create the systems that run the modern world" }
+        ],
+        activities: [
+          "Get an Excel or Google certification — it's free, looks great on resumes, and you'll use it everywhere",
+          "Intern at an accounting firm, logistics company, IT department, or hospital during the summer",
+          "Run the logistics for a real event: prom, fundraiser, or community project — manage budget, timeline, and vendors"
+        ],
+        interests: [
+          "Take a free Coursera course in project management, data analytics, or cybersecurity fundamentals",
+          "Watch Wendover Productions on YouTube — explains the hidden logistics behind everyday things like shipping and airlines",
+          "Explore cybersecurity challenges on TryHackMe or HackTheBox — organized thinking is the core of security"
+        ]
+      }
     }
   }
 };

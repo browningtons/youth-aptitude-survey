@@ -94,16 +94,35 @@ export function generatePDF(
   y += 8;
 
   // Action plan
+  const plan = primaryInfo.nextSteps[ageGroup];
+
+  const printSection = (title: string, items: string[]) => {
+    if (y > 260) { doc.addPage(); y = 20; }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text(title, 20, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    items.forEach((item) => {
+      if (y > 275) { doc.addPage(); y = 20; }
+      const lines = doc.splitTextToSize(`• ${item}`, pageWidth - 45);
+      doc.text(lines, 25, y);
+      y += lines.length * 4.5 + 2;
+    });
+    y += 3;
+  };
+
   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
   doc.text(`Action Plan for ${AGE_LABELS[ageGroup]}:`, 20, y);
-  y += 6;
-  doc.setFont('helvetica', 'normal');
-  primaryInfo.nextSteps[ageGroup].forEach((step, i) => {
-    const lines = doc.splitTextToSize(`${i + 1}. ${step}`, pageWidth - 45);
-    doc.text(lines, 25, y);
-    y += lines.length * 5 + 2;
-  });
-  y += 4;
+  y += 8;
+
+  printSection('Books to Read', plan.books.map(b => `${b.title} — ${b.why}`));
+  printSection('People to Look Up', plan.people.map(p => `${p.name} — ${p.why}`));
+  printSection('Activities to Try', plan.activities);
+  printSection('Interests to Explore', plan.interests);
+  y += 2;
 
   // Career paths
   doc.setFont('helvetica', 'bold');

@@ -15,6 +15,13 @@ export interface CareerPath {
   courses: CourseDetail[];
 }
 
+export interface ActionPlan {
+  books: { title: string; why: string }[];
+  people: { name: string; why: string }[];
+  activities: string[];
+  interests: string[];
+}
+
 export interface AptitudeInfo {
   name: string;
   icon: React.ElementType;
@@ -22,9 +29,9 @@ export interface AptitudeInfo {
   strengths: string[];
   careers: CareerPath[];
   nextSteps: {
-    elementary: string[];
-    jrHigh: string[];
-    highSchool: string[];
+    elementary: ActionPlan;
+    jrHigh: ActionPlan;
+    highSchool: ActionPlan;
   };
 }
 
