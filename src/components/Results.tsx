@@ -121,120 +121,119 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
               </p>
             </section>
 
-            {/* Action Plan + Careers */}
-            <div className="grid md:grid-cols-12 gap-8">
-              <section className="md:col-span-6 rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5 space-y-8" aria-label="Action plan">
-                <div>
-                  <h3 className="text-xl font-bold mb-2 opacity-90 flex items-center gap-2">
-                    <Rocket className="w-5 h-5" aria-hidden="true" /> {tr('results.actionPlan')}
-                  </h3>
-                  <p className="text-sm opacity-60 font-bold uppercase tracking-wider">
-                    {ageGroup === 'elementary' ? tr('results.forElementary') : ageGroup === 'jrHigh' ? tr('results.forJrHigh') : tr('results.forHighSchool')}
-                  </p>
-                </div>
-
-                {/* Books to Read */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" aria-hidden="true" /> {tr('results.booksToRead')}
-                  </h4>
-                  <ul className="space-y-3">
-                    {primaryInfo.nextSteps[ageGroup].books.map((book, idx) => (
-                      <li key={idx} className="opacity-90">
-                        <p className="font-bold text-sm">{book.title}</p>
-                        <p className="text-xs opacity-70 mt-0.5">{book.why}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* People to Look Up */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4" aria-hidden="true" /> {tr('results.peopleToLookUp')}
-                  </h4>
-                  <ul className="space-y-3">
-                    {primaryInfo.nextSteps[ageGroup].people.map((person, idx) => (
-                      <li key={idx} className="opacity-90">
-                        <p className="font-bold text-sm">{person.name}</p>
-                        <p className="text-xs opacity-70 mt-0.5">{person.why}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Activities to Try */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
-                    <Zap className="w-4 h-4" aria-hidden="true" /> {tr('results.activitiesToTry')}
-                  </h4>
-                  <ul className="space-y-2">
-                    {primaryInfo.nextSteps[ageGroup].activities.map((activity, idx) => (
-                      <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
-                          {idx + 1}
-                        </div>
-                        <span className="leading-snug">{activity}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Interests to Explore */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
-                    <Compass className="w-4 h-4" aria-hidden="true" /> {tr('results.interestsToExplore')}
-                  </h4>
-                  <ul className="space-y-2">
-                    {primaryInfo.nextSteps[ageGroup].interests.map((interest, idx) => (
-                      <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
-                          {idx + 1}
-                        </div>
-                        <span className="leading-snug">{interest}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              <section className="md:col-span-6 rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5" aria-label="Career paths">
-                <h3 className="text-xl font-bold mb-6 opacity-90 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" aria-hidden="true" /> {tr('results.careerPaths')}
-                </h3>
-                <ul className="flex flex-col gap-4">
-                  {primaryInfo.careers.map((career, idx) => (
-                    <li key={idx} className="relative group">
-                      <div className="flex items-center gap-3 opacity-80 group-hover:opacity-100 font-medium text-sm sm:text-base cursor-help transition-all">
-                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${t.progressBarFill}`} aria-hidden="true" />
-                        <span className="border-b border-dashed border-current/30 group-hover:border-current/100 pb-0.5">{career.title}</span>
-                      </div>
-                      <div className="absolute left-0 sm:left-auto sm:right-full sm:mr-4 top-full sm:top-1/2 sm:-translate-y-1/2 mt-2 sm:mt-0 z-10 w-80 sm:w-96 p-5 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 sm:translate-y-0 sm:translate-x-2 group-hover:translate-x-0 group-hover:translate-y-0 backdrop-blur-xl border border-current/10 bg-white/95 dark:bg-slate-800/95 text-slate-900 dark:text-white">
-                        <p className="font-bold mb-3 text-xs uppercase tracking-wider opacity-60">{tr('results.coursesLabel')}</p>
-                        <div className="overflow-hidden rounded-lg border border-current/10">
-                          <table className="w-full text-left text-xs sm:text-sm">
-                            <thead className="bg-current/5 border-b border-current/10">
-                              <tr>
-                                <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.courseCol')}</th>
-                                <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.conceptCol')}</th>
+            {/* Aligned Career Paths */}
+            <section className="rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5" aria-label="Aligned career paths">
+              <h3 className="text-xl font-bold mb-6 opacity-90 flex items-center gap-2">
+                <Sparkles className="w-5 h-5" aria-hidden="true" /> {tr('results.alignedCareerPaths')}
+              </h3>
+              <ul className="flex flex-col gap-4">
+                {primaryInfo.careers.map((career, idx) => (
+                  <li key={idx} className="relative group">
+                    <div className="flex items-center gap-3 opacity-80 group-hover:opacity-100 font-medium text-sm sm:text-base cursor-help transition-all">
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${t.progressBarFill}`} aria-hidden="true" />
+                      <span className="border-b border-dashed border-current/30 group-hover:border-current/100 pb-0.5">{career.title}</span>
+                    </div>
+                    <div className="absolute left-0 top-full mt-2 z-10 w-80 sm:w-96 p-5 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 backdrop-blur-xl border border-current/10 bg-white/95 dark:bg-slate-800/95 text-slate-900 dark:text-white">
+                      <p className="font-bold mb-3 text-xs uppercase tracking-wider opacity-60">{tr('results.coursesLabel')}</p>
+                      <div className="overflow-hidden rounded-lg border border-current/10">
+                        <table className="w-full text-left text-xs sm:text-sm">
+                          <thead className="bg-current/5 border-b border-current/10">
+                            <tr>
+                              <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.courseCol')}</th>
+                              <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.conceptCol')}</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-current/5">
+                            {career.courses.map((course, cIdx) => (
+                              <tr key={cIdx} className="hover:bg-current/5 transition-colors">
+                                <td className="py-2 px-3 opacity-90 font-medium">{course.name}</td>
+                                <td className="py-2 px-3 opacity-70">{course.concept}</td>
                               </tr>
-                            </thead>
-                            <tbody className="divide-y divide-current/5">
-                              {career.courses.map((course, cIdx) => (
-                                <tr key={cIdx} className="hover:bg-current/5 transition-colors">
-                                  <td className="py-2 px-3 opacity-90 font-medium">{course.name}</td>
-                                  <td className="py-2 px-3 opacity-70">{course.concept}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {/* Action Plan */}
+            <section className="rounded-2xl p-6 sm:p-8 border border-current/10 bg-current/5 space-y-8" aria-label="Action plan">
+              <div>
+                <h3 className="text-xl font-bold mb-2 opacity-90 flex items-center gap-2">
+                  <Rocket className="w-5 h-5" aria-hidden="true" /> {tr('results.actionPlan')}
+                </h3>
+                <p className="text-sm opacity-60 font-bold uppercase tracking-wider">
+                  {ageGroup === 'elementary' ? tr('results.forElementary') : ageGroup === 'jrHigh' ? tr('results.forJrHigh') : tr('results.forHighSchool')}
+                </p>
+              </div>
+
+              {/* Books to Read */}
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" aria-hidden="true" /> {tr('results.booksToRead')}
+                </h4>
+                <ul className="space-y-3">
+                  {primaryInfo.nextSteps[ageGroup].books.map((book, idx) => (
+                    <li key={idx} className="opacity-90">
+                      <p className="font-bold text-sm">{book.title}</p>
+                      <p className="text-xs opacity-70 mt-0.5">{book.why}</p>
                     </li>
                   ))}
                 </ul>
-              </section>
-            </div>
+              </div>
+
+              {/* People to Look Up */}
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                  <Users className="w-4 h-4" aria-hidden="true" /> {tr('results.peopleToLookUp')}
+                </h4>
+                <ul className="space-y-3">
+                  {primaryInfo.nextSteps[ageGroup].people.map((person, idx) => (
+                    <li key={idx} className="opacity-90">
+                      <p className="font-bold text-sm">{person.name}</p>
+                      <p className="text-xs opacity-70 mt-0.5">{person.why}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Activities to Try */}
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                  <Zap className="w-4 h-4" aria-hidden="true" /> {tr('results.activitiesToTry')}
+                </h4>
+                <ul className="space-y-2">
+                  {primaryInfo.nextSteps[ageGroup].activities.map((activity, idx) => (
+                    <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
+                        {idx + 1}
+                      </div>
+                      <span className="leading-snug">{activity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Interests to Explore */}
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-wider opacity-60 mb-3 flex items-center gap-2">
+                  <Compass className="w-4 h-4" aria-hidden="true" /> {tr('results.interestsToExplore')}
+                </h4>
+                <ul className="space-y-2">
+                  {primaryInfo.nextSteps[ageGroup].interests.map((interest, idx) => (
+                    <li key={idx} className="flex items-start gap-3 opacity-90 text-sm">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] mt-0.5 ${t.progressBarFill}`} aria-hidden="true">
+                        {idx + 1}
+                      </div>
+                      <span className="leading-snug">{interest}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
 
             {/* Secondary Aptitude */}
             {secondary.score > 0 && (

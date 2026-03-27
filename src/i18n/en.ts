@@ -34,6 +34,7 @@ const en: Record<string, string> = {
   "results.whoYouAre": "Who You Are",
   "results.actionPlan": "Your Action Plan",
   "results.careerPaths": "Future Career Paths",
+  "results.alignedCareerPaths": "Aligned Career Paths",
   "results.coursesLabel": "Core Degree Courses & Skills",
   "results.courseCol": "Course",
   "results.conceptCol": "Concept / Skill",
