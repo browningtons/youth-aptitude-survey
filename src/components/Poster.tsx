@@ -1,9 +1,7 @@
-import { useState } from 'react';
-import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
-import { Download, Printer, RefreshCcw } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { Printer } from 'lucide-react';
 import type { ThemeStyles } from '../types';
 import { useI18n } from '../i18n';
-import { generatePosterPDF } from '../utils/posterPdf';
 
 interface Props {
   t: ThemeStyles;
@@ -11,52 +9,17 @@ interface Props {
 
 export default function Poster({ t }: Props) {
   const { t: tr } = useI18n();
-  const [downloading, setDownloading] = useState(false);
-
   const appUrl = window.location.origin + window.location.pathname;
-
-  const handleDownload = async () => {
-    setDownloading(true);
-    try {
-      await generatePosterPDF(appUrl);
-    } finally {
-      setDownloading(false);
-    }
-  };
 
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Printer className={`w-8 h-8 ${t.iconColor}`} aria-hidden="true" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold">{tr('poster.title')}</h1>
-          </div>
-          <p className="opacity-70 text-sm sm:text-base max-w-2xl">{tr('poster.subtitle')}</p>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <Printer className={`w-8 h-8 ${t.iconColor}`} aria-hidden="true" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold">{tr('poster.title')}</h1>
         </div>
-        <button
-          onClick={handleDownload}
-          disabled={downloading}
-          className={`px-5 py-3 text-sm font-bold flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${t.buttonPrimary}`}
-        >
-          {downloading ? (
-            <>
-              <RefreshCcw className="w-4 h-4 animate-spin" aria-hidden="true" />
-              {tr('poster.generating')}
-            </>
-          ) : (
-            <>
-              <Download className="w-4 h-4" aria-hidden="true" />
-              {tr('poster.downloadPdf')}
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* How-to callout */}
-      <div className="mb-8 p-4 rounded-xl border border-current/10 bg-current/5 text-sm opacity-80">
-        <strong className={t.accentText}>{tr('poster.howToTitle')}</strong> {tr('poster.howTo')}
+        <p className="opacity-70 text-sm sm:text-base max-w-2xl">{tr('poster.subtitle')}</p>
       </div>
 
       {/* Preview — 3 panels */}
@@ -138,11 +101,6 @@ export default function Poster({ t }: Props) {
             </p>
           </div>
         </PanelPreview>
-      </div>
-
-      {/* Hidden high-res QR canvas used by the PDF exporter */}
-      <div id="poster-qr-hidden" className="hidden" aria-hidden="true">
-        <QRCodeCanvas value={appUrl} size={512} level="H" />
       </div>
     </div>
   );
