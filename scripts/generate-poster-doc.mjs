@@ -86,34 +86,32 @@ const children = [
   // ----- Panel 1 -----
   panelTitle('Panel 1 — Left Wing'),
   sectionHead('Who?'),
-  body('We are trying to get young kids from 1st – 3rd grade to be more prepared for real life action.'),
+  body("We're helping students from elementary through high school discover what they're great at — and find the careers that fit how they actually think."),
 
   sectionHead('Why?'),
-  body("Kids don't learn important real life skills like how taxes work, budgeting, money, building credit, or understanding loans. This all can affect a kid's adulthood."),
+  body("Most kids leave school without a clear sense of what they're built for. They pick paths from movies, family pressure, or pure guesswork — and end up changing course years later. The earlier you understand your own aptitude, the smarter you can learn."),
 
   sectionHead('Facts'),
-  placeholder('Add your facts here — you can keep these or replace them'),
-  bullet("1 in 3 U.S. adults can't cover a $400 emergency."),
-  bullet('Most kids name 5 brands before 5 career paths.'),
-  bullet('Average person changes careers 5–7 times.'),
-  bullet('Only 26 states require personal finance to graduate.'),
+  bullet('The average person changes careers 5–7 times in their lifetime.'),
+  bullet('Most kids can name 5 brands before they can name 5 career paths.'),
+  bullet('Workers in jobs that match their personality are far more likely to stay, grow, and feel fulfilled.'),
+  bullet("The Holland RIASEC model has guided career counselors for more than 60 years — it's the backbone of this survey."),
 
   pageBreak(),
 
   // ----- Panel 2 -----
   panelTitle('Panel 2 — Center'),
-  sectionHead('QR Code'),
-  placeholder('Place the QR code here — open the live app and screenshot the Scan modal'),
+  sectionHead('The Pathway Finder Survey'),
+  body("In just 15 age-adjusted questions, the Pathway Finder figures out how you think and matches you to one of 6 aptitude profiles. You get a list of careers that fit, plus a personalized action plan with books to read, people to look up, and activities to try — built for your age. Works in English and Spanish."),
 
-  sectionHead('The Pathway Finder'),
-  body('This survey asks questions to get a better understanding about you so it can reach multiple jobs. It will explain why it gave you those jobs and give books and people to look up too.'),
+  placeholder('Place the QR code here — print one from the live app, or use the QR shown in the Poster tab'),
 
   pageBreak(),
 
   // ----- Panel 3 -----
   panelTitle('Panel 3 — Right Wing'),
   sectionHead('Future'),
-  body("If education changed, students would get to understand the real world sooner and better. They wouldn't just memorize information but learn with others. The future world would have more confident, creative people that can solve real-world challenges."),
+  body("If education changed, students would understand the world — and themselves — sooner and better. They wouldn't just memorize information; they'd learn by doing, together. The future would have more confident, creative people solving real-world challenges."),
 
   sectionHead('Robert Kiyosaki'),
   ...quote("Schools teach you to work for money, but don't teach you how money works.", 'Robert Kiyosaki'),

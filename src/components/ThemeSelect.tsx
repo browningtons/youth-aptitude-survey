@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
 import type { Theme, ThemeStyles } from '../types';
 import { THEMES } from '../data/themes';
 import { useI18n, LanguageToggle } from '../i18n';
@@ -24,6 +24,28 @@ export default function ThemeSelect({ t, themeKey, setThemeKey, onContinue }: Pr
         alt="Mount Ogden Junior High"
         className="w-24 h-24 mx-auto mb-6 object-contain drop-shadow-md"
       />
+
+      {/* Flow indicator — shows the user where they are in the journey */}
+      <ol
+        className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-8 text-[11px] font-bold uppercase tracking-wider"
+        aria-label="Survey flow"
+      >
+        <li
+          className={`px-3 py-1 rounded-full ${t.progressBarFill} text-white shadow-sm`}
+          aria-current="step"
+        >
+          1. {tr('theme.stepStyle')}
+        </li>
+        <ChevronRight className="w-3 h-3 opacity-40" aria-hidden="true" />
+        <li className="px-3 py-1 rounded-full opacity-50 border border-current/20">
+          2. {tr('theme.stepInfo')}
+        </li>
+        <ChevronRight className="w-3 h-3 opacity-40" aria-hidden="true" />
+        <li className="px-3 py-1 rounded-full opacity-50 border border-current/20">
+          3. {tr('theme.stepSurvey')}
+        </li>
+      </ol>
+
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-4">{tr('theme.title')}</h1>
       <p className="opacity-80 mb-8 max-w-md mx-auto">{tr('theme.subtitle')}</p>
 

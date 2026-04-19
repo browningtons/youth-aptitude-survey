@@ -4,9 +4,12 @@ const en: Record<string, string> = {
   "app.skipToContent": "Skip to main content",
 
   // Theme Select
-  "theme.title": "Select a Prototype",
-  "theme.subtitle": "Before we begin, choose which visual style you'd like to test for Student Paths.",
-  "theme.confirm": "Confirm & Continue",
+  "theme.title": "Pick Your Survey Style",
+  "theme.subtitle": "Choose how you want the survey to look. Next, you'll enter your name and take the 15-question Pathway Finder survey.",
+  "theme.confirm": "Continue",
+  "theme.stepStyle": "Style",
+  "theme.stepInfo": "Your Info",
+  "theme.stepSurvey": "Survey",
 
   // Onboarding
   "onboarding.title": "Discover Your Path",

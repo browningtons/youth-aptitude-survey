@@ -4,9 +4,12 @@ const es: Record<string, string> = {
   "app.skipToContent": "Ir al contenido principal",
 
   // Theme Select
-  "theme.title": "Selecciona un Prototipo",
-  "theme.subtitle": "Antes de comenzar, elige el estilo visual que te gustaría probar para Caminos Estudiantiles.",
-  "theme.confirm": "Confirmar y Continuar",
+  "theme.title": "Elige el Estilo de Tu Encuesta",
+  "theme.subtitle": "Elige cómo quieres que se vea la encuesta. Después, ingresarás tu nombre y harás las 15 preguntas del Pathway Finder.",
+  "theme.confirm": "Continuar",
+  "theme.stepStyle": "Estilo",
+  "theme.stepInfo": "Tus Datos",
+  "theme.stepSurvey": "Encuesta",
 
   // Onboarding
   "onboarding.title": "Descubre Tu Camino",
