@@ -1,6 +1,8 @@
-import { User, ArrowRight, Info } from 'lucide-react';
+import { ArrowRight, Info } from 'lucide-react';
 import type { ThemeStyles } from '../types';
 import { useI18n, LanguageToggle } from '../i18n';
+
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.png`;
 
 interface Props {
   t: ThemeStyles;
@@ -28,9 +30,12 @@ export default function Onboarding({ t, name, setName, dob, setDob, onStart, onA
         </button>
       </div>
 
-      <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${t.progressBarBg}`} aria-hidden="true">
-        <User className={`w-10 h-10 ${t.iconColor}`} />
-      </div>
+      <img
+        src={LOGO_URL}
+        alt="Mount Ogden Junior High"
+        className="w-24 h-24 mx-auto mb-6 object-contain drop-shadow-md"
+      />
+
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-2">{tr('onboarding.title')}</h1>
       <p className="opacity-80 mb-8">{tr('onboarding.subtitle')}</p>
 

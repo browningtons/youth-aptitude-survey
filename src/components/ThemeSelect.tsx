@@ -1,7 +1,9 @@
-import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import type { Theme, ThemeStyles } from '../types';
 import { THEMES } from '../data/themes';
 import { useI18n, LanguageToggle } from '../i18n';
+
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.png`;
 
 interface Props {
   t: ThemeStyles;
@@ -17,7 +19,11 @@ export default function ThemeSelect({ t, themeKey, setThemeKey, onContinue }: Pr
     <section className={`w-full max-w-2xl p-8 sm:p-12 text-center relative ${t.card}`} aria-label={tr('theme.title')}>
       <LanguageToggle className="absolute top-6 right-6" />
 
-      <Sparkles className={`w-16 h-16 mx-auto mb-6 ${t.iconColor}`} aria-hidden="true" />
+      <img
+        src={LOGO_URL}
+        alt="Mount Ogden Junior High"
+        className="w-24 h-24 mx-auto mb-6 object-contain drop-shadow-md"
+      />
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-4">{tr('theme.title')}</h1>
       <p className="opacity-80 mb-8 max-w-md mx-auto">{tr('theme.subtitle')}</p>
 
