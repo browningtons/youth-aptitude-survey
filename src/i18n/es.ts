@@ -58,6 +58,15 @@ const es: Record<string, string> = {
   "admin.back": "Volver al Inicio",
   "admin.methodology": "Metodología",
   "admin.dashboard": "Panel de Control",
+  "admin.poster": "Póster",
+
+  // Poster Builder
+  "poster.title": "Póster Trifold",
+  "poster.subtitle": "Diseño de 3 paneles listo para imprimir para tu feria de ciencias. Cada panel es tamaño carta — imprime, recorta y pega sobre el tablero trifold.",
+  "poster.downloadPdf": "Descargar PDF del Póster",
+  "poster.generating": "Generando PDF...",
+  "poster.howToTitle": "Cómo usar:",
+  "poster.howTo": "Haz clic en \"Descargar PDF del Póster\" para obtener un PDF de 3 páginas. Imprime en papel tamaño carta, recorta los márgenes, luego pega el Panel 1 en el ala izquierda, el Panel 2 en el centro y el Panel 3 en el ala derecha de tu tablero trifold.",
   "admin.methodologyTitle": "Metodología y Resultados",
   "admin.methodologyP1": "Esta encuesta de aptitudes está inspirada estructuralmente en los Temas Ocupacionales de Holland (RIASEC), una teoría ampliamente respetada sobre carreras y elección vocacional basada en tipos de personalidad. Propone que las personas son más adecuadas para entornos de trabajo que coinciden con sus preferencias inherentes y estilos de resolución de problemas.",
   "admin.methodologyP2": "Para hacer la encuesta altamente atractiva y accesible para estudiantes de primaria, secundaria y preparatoria, las categorías psicológicas centrales se han adaptado en seis \"Perfiles de Aptitud\" intuitivos. El algoritmo hace 15 preguntas dinámicamente ajustadas por edad, forzando elecciones entre cuatro caminos conductuales distintos, calculando finalmente una aptitud dominante.",

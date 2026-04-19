@@ -58,6 +58,15 @@ const en: Record<string, string> = {
   "admin.back": "Back to Setup",
   "admin.methodology": "Methodology",
   "admin.dashboard": "Dashboard",
+  "admin.poster": "Poster",
+
+  // Poster Builder
+  "poster.title": "Trifold Poster",
+  "poster.subtitle": "Print-ready 3-panel layout for your science fair board. Each panel is letter-size — print, trim, and glue onto the trifold.",
+  "poster.downloadPdf": "Download Poster PDF",
+  "poster.generating": "Generating PDF...",
+  "poster.howToTitle": "How to use:",
+  "poster.howTo": "Click \"Download Poster PDF\" to get a 3-page PDF. Print on letter paper, trim the margins, then glue Panel 1 to the left wing, Panel 2 to the center, and Panel 3 to the right wing of your trifold board.",
   "admin.methodologyTitle": "Methodology & Outcomes",
   "admin.methodologyP1": "This aptitude survey is structurally inspired by the Holland Occupational Themes (RIASEC), a widely respected theory of careers and vocational choice based upon personality types. It posits that people are best suited to work environments that match their inherent preferences and problem-solving styles.",
   "admin.methodologyP2": "To make the survey highly engaging and accessible for students across elementary, junior high, and high school, the core psychological categories have been adapted into six intuitive \"Aptitude Profiles\". The algorithm asks 15 dynamically age-adjusted questions, forcing choices between four distinct behavioral paths, ultimately calculating a dominant aptitude.",

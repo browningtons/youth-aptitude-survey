@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ArrowLeft, BookOpen, Sparkles, BarChart3 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Sparkles, BarChart3, Printer } from 'lucide-react';
 import type { Aptitude, ThemeStyles } from '../types';
 import { APTITUDE_DETAILS } from '../data/aptitudes';
 import Dashboard from './Dashboard';
+import Poster from './Poster';
 import { useI18n } from '../i18n';
 
-type Tab = 'methodology' | 'dashboard';
+type Tab = 'methodology' | 'dashboard' | 'poster';
 
 interface Props {
   t: ThemeStyles;
@@ -47,12 +48,23 @@ export default function Admin({ t, onBack }: Props) {
           >
             <BarChart3 className="w-4 h-4" aria-hidden="true" /> {tr('admin.dashboard')}
           </button>
+          <button
+            onClick={() => setTab('poster')}
+            role="tab"
+            aria-selected={tab === 'poster'}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all focus:ring-2 focus:ring-current focus:ring-offset-2 ${
+              tab === 'poster' ? t.buttonPrimary : 'opacity-60 hover:opacity-100'
+            }`}
+          >
+            <Printer className="w-4 h-4" aria-hidden="true" /> {tr('admin.poster')}
+          </button>
         </div>
       </nav>
 
       <div role="tabpanel">
         {tab === 'methodology' && <MethodologyContent t={t} />}
         {tab === 'dashboard' && <Dashboard t={t} />}
+        {tab === 'poster' && <Poster t={t} />}
       </div>
     </section>
   );
