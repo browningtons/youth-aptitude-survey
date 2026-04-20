@@ -36,6 +36,7 @@ const en: Record<string, string> = {
   "results.scoreBreakdown": "Your Score Breakdown",
   "results.primaryLabel": "Primary Aptitude",
   "results.secondaryLabel": "Secondary Aptitude",
+  "results.combo": "A {primary} with a {secondary} streak — blending {primaryStrength} with {secondaryStrength}.",
   "results.whoYouAre": "Who You Are",
   "results.actionPlan": "Your Action Plan",
   "results.careerPaths": "Future Career Paths",

@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { User, Rocket, Sparkles, RefreshCcw, Download, Share2, QrCode, FileText, BookOpen, Users, Zap, Compass } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { User, Rocket, Sparkles, RefreshCcw, Download, Share2, QrCode, FileText, BookOpen, Users, Zap, Compass, ChevronDown } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import confetti from 'canvas-confetti';
 import type { AgeGroup, Aptitude, Theme, ThemeStyles } from '../types';
 import type { RankedAptitude } from '../hooks/useSurvey';
 import { APTITUDE_DETAILS } from '../data/aptitudes';
@@ -34,6 +35,7 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
   const { t: tr } = useI18n();
   const [showQR, setShowQR] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [expandedCareer, setExpandedCareer] = useState<number | null>(null);
 
   const ranked = getRankedAptitudes();
   const primary = ranked[0];
@@ -47,6 +49,31 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
     name: r.aptitude,
     score: r.score
   }));
+
+  // Celebratory burst on mount, colored by the student's primary aptitude.
+  useEffect(() => {
+    const primaryColor = CHART_COLORS[primary.aptitude];
+    const secondaryColor = CHART_COLORS[secondary.aptitude];
+    confetti({
+      particleCount: 90,
+      spread: 70,
+      startVelocity: 35,
+      origin: { y: 0.3 },
+      colors: [primaryColor, secondaryColor, '#ffffff'],
+      disableForReducedMotion: true,
+    });
+    // Only fires on initial mount; we intentionally don't refire on re-render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const hasSecondary = secondary && secondary.score > 0;
+  const comboLine = hasSecondary
+    ? tr('results.combo')
+        .replace('{primary}', tr(`aptitude.${primary.aptitude}`))
+        .replace('{secondary}', tr(`aptitude.${secondary.aptitude}`))
+        .replace('{primaryStrength}', tr(`strength.${primaryInfo.strengths[0]}`))
+        .replace('{secondaryStrength}', tr(`strength.${secondaryInfo.strengths[0]}`))
+    : null;
 
   const handleShare = async () => {
     const url = getShareableURL();
@@ -111,6 +138,13 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
               </div>
             </div>
 
+            {/* Primary × Secondary combo line — the "this quiz actually gets me" moment */}
+            {comboLine && (
+              <p className={`text-lg sm:text-xl font-semibold leading-snug text-center -mt-4 ${t.accentText}`} aria-label="Your aptitude blend">
+                {comboLine}
+              </p>
+            )}
+
             {/* Who You Are */}
             <section className="md:col-span-12 flex flex-col justify-center mb-2 border-b border-current/10 pb-8" aria-label="Primary aptitude description">
               <h3 className="text-xl font-bold mb-4 opacity-90 flex items-center gap-2">
@@ -126,36 +160,57 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
               <h3 className="text-xl font-bold mb-6 opacity-90 flex items-center gap-2">
                 <Sparkles className="w-5 h-5" aria-hidden="true" /> {tr('results.alignedCareerPaths')}
               </h3>
-              <ul className="flex flex-col gap-4">
-                {primaryInfo.careers.map((career, idx) => (
-                  <li key={idx} className="relative group">
-                    <div className="flex items-center gap-3 opacity-80 group-hover:opacity-100 font-medium text-sm sm:text-base cursor-help transition-all">
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${t.progressBarFill}`} aria-hidden="true" />
-                      <span className="border-b border-dashed border-current/30 group-hover:border-current/100 pb-0.5">{career.title}</span>
-                    </div>
-                    <div className="absolute left-0 top-full mt-2 z-10 w-80 sm:w-96 p-5 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 backdrop-blur-xl border border-current/10 bg-white/95 dark:bg-slate-800/95 text-slate-900 dark:text-white">
-                      <p className="font-bold mb-3 text-xs uppercase tracking-wider opacity-60">{tr('results.coursesLabel')}</p>
-                      <div className="overflow-hidden rounded-lg border border-current/10">
-                        <table className="w-full text-left text-xs sm:text-sm">
-                          <thead className="bg-current/5 border-b border-current/10">
-                            <tr>
-                              <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.courseCol')}</th>
-                              <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.conceptCol')}</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-current/5">
-                            {career.courses.map((course, cIdx) => (
-                              <tr key={cIdx} className="hover:bg-current/5 transition-colors">
-                                <td className="py-2 px-3 opacity-90 font-medium">{course.name}</td>
-                                <td className="py-2 px-3 opacity-70">{course.concept}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </li>
-                ))}
+              <ul className="flex flex-col gap-2">
+                {primaryInfo.careers.map((career, idx) => {
+                  const isOpen = expandedCareer === idx;
+                  const panelId = `career-panel-${idx}`;
+                  return (
+                    <li key={idx}>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCareer(isOpen ? null : idx)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className={`w-full flex items-center justify-between gap-3 p-3 rounded-xl text-left font-medium text-sm sm:text-base transition-all focus:ring-2 focus:ring-current focus:ring-offset-2 focus:ring-offset-transparent hover:bg-current/5 ${isOpen ? 'bg-current/5' : ''}`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${t.progressBarFill}`} aria-hidden="true" />
+                          <span>{career.title}</span>
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 opacity-60 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      {isOpen && (
+                        <div
+                          id={panelId}
+                          className="mt-2 p-4 sm:p-5 rounded-xl border border-current/10 bg-current/5"
+                        >
+                          <p className="font-bold mb-3 text-xs uppercase tracking-wider opacity-60">{tr('results.coursesLabel')}</p>
+                          <div className="overflow-hidden rounded-lg border border-current/10">
+                            <table className="w-full text-left text-xs sm:text-sm">
+                              <thead className="bg-current/10 border-b border-current/10">
+                                <tr>
+                                  <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.courseCol')}</th>
+                                  <th className="py-2 px-3 font-semibold opacity-80 w-1/2" scope="col">{tr('results.conceptCol')}</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-current/5">
+                                {career.courses.map((course, cIdx) => (
+                                  <tr key={cIdx}>
+                                    <td className="py-2 px-3 opacity-90 font-medium">{course.name}</td>
+                                    <td className="py-2 px-3 opacity-70">{course.concept}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </section>
 
