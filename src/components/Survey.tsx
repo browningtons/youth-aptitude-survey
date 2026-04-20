@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { AgeGroup, Aptitude, Question, ThemeStyles } from '../types';
 import { useI18n } from '../i18n';
+import FlowIndicator from './FlowIndicator';
 
 interface Props {
   t: ThemeStyles;
@@ -41,6 +42,7 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
 
   return (
     <section className={`w-full max-w-3xl p-6 sm:p-12 ${t.card}`} role="form" aria-label={questionLabel}>
+      <FlowIndicator t={t} active={3} className="mb-6" />
       <div className="flex justify-between items-center mb-6">
         <span className="font-semibold opacity-70" aria-live="polite">{questionLabel}</span>
         <span className={`font-bold px-3 py-1 rounded-full text-sm ${t.progressBarBg} ${t.accentText}`}>

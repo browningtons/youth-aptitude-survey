@@ -1,6 +1,7 @@
 import { ArrowRight, Info } from 'lucide-react';
 import type { ThemeStyles } from '../types';
 import { useI18n, LanguageToggle } from '../i18n';
+import FlowIndicator from './FlowIndicator';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.png`;
 
@@ -35,6 +36,8 @@ export default function Onboarding({ t, name, setName, dob, setDob, onStart, onA
         alt="Mount Ogden Junior High"
         className="w-24 h-24 mx-auto mb-6 object-contain drop-shadow-md"
       />
+
+      <FlowIndicator t={t} active={2} className="mb-8" />
 
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-2">{tr('onboarding.title')}</h1>
       <p className="opacity-80 mb-8">{tr('onboarding.subtitle')}</p>
