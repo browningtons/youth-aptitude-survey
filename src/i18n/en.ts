@@ -2,6 +2,7 @@ const en: Record<string, string> = {
   // App
   "app.title": "Student Paths",
   "app.skipToContent": "Skip to main content",
+  "app.credit": "A 9th grade class project by Easton Brown and Dray Montoya",
 
   // Theme Select
   "theme.title": "Pick Your Survey Style",

@@ -1,5 +1,6 @@
 import { THEMES } from './data/themes';
 import { useSurvey } from './hooks/useSurvey';
+import { useI18n } from './i18n';
 import ThemeSelect from './components/ThemeSelect';
 import Onboarding from './components/Onboarding';
 import Survey from './components/Survey';
@@ -9,6 +10,7 @@ import Admin from './components/Admin';
 export default function App() {
   const survey = useSurvey();
   const t = THEMES[survey.themeKey];
+  const { t: tr } = useI18n();
 
   return (
     <div className={`min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 transition-colors duration-500 ${t.appBg}`}>
@@ -69,6 +71,10 @@ export default function App() {
           />
         )}
       </main>
+
+      <footer className="mt-8 text-center text-xs opacity-60 px-4">
+        {tr('app.credit')}
+      </footer>
     </div>
   );
 }
