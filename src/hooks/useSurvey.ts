@@ -26,6 +26,7 @@ interface SavedState {
   currentQuestionIndex: number;
   scores: Record<Aptitude, number>;
   shuffledQuestions: Question[];
+  answerHistory: Aptitude[];
 }
 
 function loadSavedState(): SavedState | null {
@@ -40,6 +41,8 @@ function loadSavedState(): SavedState | null {
     if (!THEME_KEYS.includes(parsed.themeKey)) return null;
     if (!AGE_GROUPS.includes(parsed.ageGroup)) return null;
     if (!parsed.step || !parsed.scores || !Array.isArray(parsed.shuffledQuestions)) return null;
+    // answerHistory is optional for forward-compat with older blobs — default to empty.
+    if (!Array.isArray(parsed.answerHistory)) parsed.answerHistory = [];
     return parsed as SavedState;
   } catch {
     return null;
@@ -79,6 +82,9 @@ export function useSurvey() {
   const [scores, setScores] = useState<Record<Aptitude, number>>({ ...INITIAL_SCORES });
   const [isDownloading, setIsDownloading] = useState(false);
   const [shuffledQuestions, setShuffledQuestions] = useState(QUESTIONS['jrHigh']);
+  // Ordered list of aptitudes the student has awarded, one per answered question.
+  // Enables goBack() to rewind scores without recomputing from scratch.
+  const [answerHistory, setAnswerHistory] = useState<Aptitude[]>([]);
 
   const currentQuestions = shuffledQuestions;
 
@@ -118,6 +124,7 @@ export function useSurvey() {
       setCurrentQuestionIndex(saved.currentQuestionIndex);
       setScores(saved.scores);
       setShuffledQuestions(saved.shuffledQuestions);
+      setAnswerHistory(saved.answerHistory);
       setStep(saved.step);
     }
     hydratedRef.current = true;
@@ -144,12 +151,13 @@ export function useSurvey() {
         currentQuestionIndex,
         scores,
         shuffledQuestions,
+        answerHistory,
       };
       window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(blob));
     } catch {
       // Storage full or disabled — degrade silently.
     }
-  }, [step, themeKey, name, ageGroup, currentQuestionIndex, scores, shuffledQuestions]);
+  }, [step, themeKey, name, ageGroup, currentQuestionIndex, scores, shuffledQuestions, answerHistory]);
 
   const startSurvey = () => {
     if (!name || !ageGroup) return;
@@ -159,12 +167,17 @@ export function useSurvey() {
         options: shuffle(q.options)
       }))
     );
+    // Fresh run — drop any leftover history and scores from a retake.
+    setAnswerHistory([]);
+    setScores({ ...INITIAL_SCORES });
+    setCurrentQuestionIndex(0);
     setStep('survey');
   };
 
   const handleAnswer = (aptitude: Aptitude) => {
     const newScores = { ...scores, [aptitude]: scores[aptitude] + 1 };
     setScores(newScores);
+    setAnswerHistory(prev => [...prev, aptitude]);
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
@@ -177,6 +190,17 @@ export function useSurvey() {
       setStep('results');
     }
   };
+
+  // Undo the most recent answer: subtract it from scores, rewind the index.
+  const goBack = () => {
+    if (answerHistory.length === 0 || currentQuestionIndex === 0) return;
+    const last = answerHistory[answerHistory.length - 1];
+    setScores(prev => ({ ...prev, [last]: Math.max(0, prev[last] - 1) }));
+    setAnswerHistory(prev => prev.slice(0, -1));
+    setCurrentQuestionIndex(prev => prev - 1);
+  };
+
+  const canGoBack = currentQuestionIndex > 0 && answerHistory.length > 0;
 
   const getRankedAptitudes = (): RankedAptitude[] => {
     return (Object.entries(scores) as [Aptitude, number][])
@@ -198,6 +222,7 @@ export function useSurvey() {
     setCurrentQuestionIndex(0);
     setScores({ ...INITIAL_SCORES });
     setShuffledQuestions(QUESTIONS['jrHigh']);
+    setAnswerHistory([]);
     // Clear URL params
     window.history.replaceState({}, '', window.location.pathname);
     setStep('onboarding');
@@ -214,6 +239,8 @@ export function useSurvey() {
     isDownloading, setIsDownloading,
     startSurvey,
     handleAnswer,
+    goBack,
+    canGoBack,
     getRankedAptitudes,
     getShareableURL,
     resetSurvey,

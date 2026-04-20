@@ -47,6 +47,8 @@ export default function App() {
             currentQuestions={survey.currentQuestions}
             ageGroup={survey.ageGroup}
             onAnswer={survey.handleAnswer}
+            onBack={survey.goBack}
+            canGoBack={survey.canGoBack}
           />
         )}
 

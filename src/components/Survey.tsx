@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import type { AgeGroup, Aptitude, Question, ThemeStyles } from '../types';
 import { useI18n } from '../i18n';
 import FlowIndicator from './FlowIndicator';
@@ -9,9 +10,11 @@ interface Props {
   currentQuestions: Question[];
   ageGroup: AgeGroup;
   onAnswer: (aptitude: Aptitude) => void;
+  onBack: () => void;
+  canGoBack: boolean;
 }
 
-export default function Survey({ t, currentQuestionIndex, currentQuestions, ageGroup, onAnswer }: Props) {
+export default function Survey({ t, currentQuestionIndex, currentQuestions, ageGroup, onAnswer, onBack, canGoBack }: Props) {
   const { t: tr } = useI18n();
   const question = currentQuestions[currentQuestionIndex];
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -28,11 +31,17 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
         if (idx < question.options.length) {
           onAnswer(question.options[idx].aptitude);
         }
+      } else if ((key === 'Backspace' || key === 'ArrowLeft') && canGoBack) {
+        // Ignore if the user is typing in an input (future-proofing).
+        const target = e.target as HTMLElement | null;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+        e.preventDefault();
+        onBack();
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [question, onAnswer]);
+  }, [question, onAnswer, onBack, canGoBack]);
 
   const questionLabel = tr('survey.questionOf')
     .replace('{current}', String(currentQuestionIndex + 1))
@@ -76,9 +85,20 @@ export default function Survey({ t, currentQuestionIndex, currentQuestions, ageG
         ))}
       </div>
 
-      <p className="text-center mt-6 text-sm opacity-40 font-medium" aria-hidden="true">
-        {tr('survey.keyboardHint')}
-      </p>
+      <div className="mt-6 flex items-center justify-between gap-4">
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={!canGoBack}
+          className={`flex items-center gap-1.5 text-sm font-semibold opacity-60 hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed transition-opacity focus:ring-2 focus:ring-current focus:ring-offset-2 rounded px-2 py-1 ${t.iconColor}`}
+          aria-label={tr('survey.previous')}
+        >
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" /> {tr('survey.previous')}
+        </button>
+        <p className="text-sm opacity-40 font-medium text-right" aria-hidden="true">
+          {tr('survey.keyboardHint')}
+        </p>
+      </div>
     </section>
   );
 }

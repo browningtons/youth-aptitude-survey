@@ -27,7 +27,8 @@ const en: Record<string, string> = {
   "survey.ageGroup.elementary": "Elementary",
   "survey.ageGroup.jrHigh": "Jr. High",
   "survey.ageGroup.highSchool": "High School",
-  "survey.keyboardHint": "Press 1–4 to answer with keyboard",
+  "survey.keyboardHint": "Press 1–4 to answer · ← to go back",
+  "survey.previous": "Previous",
 
   // Results
   "results.complete": "Survey Complete",
