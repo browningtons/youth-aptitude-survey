@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  BarChart, Bar
 } from 'recharts';
-import { RefreshCcw, TrendingUp, Trophy, Palette, Users, Calendar } from 'lucide-react';
+import { RefreshCcw, TrendingUp, Trophy, Palette, Users, Calendar, Clock, Sparkles } from 'lucide-react';
 import type { Aptitude, AnalyticsData, ThemeStyles } from '../types';
 import { fetchAnalytics } from '../utils/fetchAnalytics';
 import { useI18n } from '../i18n';
@@ -25,6 +26,13 @@ function todayKey(): string {
 
 function formatTime(d: Date): string {
   return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+}
+
+function formatDuration(sec: number): string {
+  if (sec < 60) return `${sec}s`;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return s === 0 ? `${m}m` : `${m}m ${s}s`;
 }
 
 const APTITUDE_COLORS: Record<string, string> = {
@@ -116,6 +124,28 @@ export default function Dashboard({ t }: Props) {
     );
   }
 
+  // Webhook reachable, but nobody has taken the survey yet. Distinct from
+  // the connection-error state above — we want something warmer for judges
+  // who walk up before the first student finishes.
+  if (data.total === 0) {
+    return (
+      <div className="text-center py-20">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-current/10 mb-5">
+          <Sparkles className={`w-7 h-7 ${t.iconColor}`} />
+        </div>
+        <p className="text-lg font-semibold opacity-80 mb-2">{tr('dashboard.waitingTitle')}</p>
+        <p className="opacity-50 text-sm max-w-md mx-auto">{tr('dashboard.waitingDesc')}</p>
+        <div className="flex items-center justify-center gap-2 mt-8 text-xs font-medium opacity-50">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+          </span>
+          <span>{tr('dashboard.live')}</span>
+        </div>
+      </div>
+    );
+  }
+
   // Prepare chart data — ensure all 6 aptitudes always appear
   const aptitudeData = ALL_APTITUDES.map(name => ({
     name,
@@ -138,6 +168,20 @@ export default function Dashboard({ t }: Props) {
   }));
   const timeData = data.byDate.map(d => ({ date: d.date, count: d.count }));
 
+  // Cross-tab: stacked bar showing each grade level's top aptitudes side by side.
+  // `byAgeGroupAptitude` may be undefined on legacy payloads — fall back to
+  // zero rows so the chart renders an empty frame instead of crashing.
+  const crossTabRaw = data.byAgeGroupAptitude ?? [];
+  const crossTabData = crossTabRaw.map(row => ({
+    ...row,
+    name: ageGroupLabels[row.ageGroup] || row.ageGroup,
+  }));
+  // Hide the cross-tab entirely until at least one cell has data — an all-zero
+  // chart looks broken rather than empty.
+  const crossTabHasData = crossTabData.some(row =>
+    ALL_APTITUDES.some(apt => (row as unknown as Record<string, number>)[apt] > 0)
+  );
+
   // Stat helpers
   const topAptitude = aptitudeLeaderboard.length > 0 ? aptitudeLeaderboard[0].name : '—';
   const topTheme = themeData.length > 0
@@ -145,6 +189,7 @@ export default function Dashboard({ t }: Props) {
     : '—';
   const today = todayKey();
   const todayCount = data.byDate.find(d => d.date === today)?.count ?? 0;
+  const avgDurationSec = data.avgDurationSec ?? null;
 
   return (
     <div className="space-y-8">
@@ -161,9 +206,15 @@ export default function Dashboard({ t }: Props) {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <StatCard t={t} label={tr('dashboard.totalSubmissions')} value={String(data.total)} icon={<Users className="w-5 h-5" />} />
         <StatCard t={t} label={tr('dashboard.today')} value={String(todayCount)} icon={<Calendar className="w-5 h-5" />} pulse={todayCount > 0} />
+        <StatCard
+          t={t}
+          label={tr('dashboard.avgTime')}
+          value={avgDurationSec !== null ? formatDuration(avgDurationSec) : '—'}
+          icon={<Clock className="w-5 h-5" />}
+        />
         <StatCard t={t} label={tr('dashboard.topAptitude')} value={topAptitude} icon={<Trophy className="w-5 h-5" />} color={APTITUDE_COLORS[topAptitude]} />
         <StatCard t={t} label={tr('dashboard.mostUsedTheme')} value={topTheme} icon={<Palette className="w-5 h-5" />} color={THEME_COLORS[topTheme]} />
       </div>
@@ -269,6 +320,27 @@ export default function Dashboard({ t }: Props) {
           </ResponsiveContainer>
         </ChartCard>
       </div>
+
+      {/* Cross-tab: aptitude mix by age group — the "science" chart judges care about */}
+      {crossTabHasData && (
+        <ChartCard t={t} title={tr('dashboard.aptitudeByAge')}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={crossTabData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+              <XAxis dataKey="name" tick={{ fontSize: 12, fontWeight: 600 }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              {ALL_APTITUDES.map(apt => (
+                <Bar key={apt} dataKey={apt} stackId="a" fill={APTITUDE_COLORS[apt]} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+          <p className="text-xs opacity-50 font-medium mt-3">
+            {tr('dashboard.aptitudeByAgeDesc')}
+          </p>
+        </ChartCard>
+      )}
 
       {/* Timeline */}
       <ChartCard t={t} title={tr('dashboard.submissionsOverTime')}>

@@ -27,6 +27,9 @@ interface SavedState {
   scores: Record<Aptitude, number>;
   shuffledQuestions: Question[];
   answerHistory: Aptitude[];
+  // Unix ms — captured when startSurvey runs. Null until the student begins
+  // (or if we're resuming a blob written before this field existed).
+  surveyStartedAt: number | null;
 }
 
 function loadSavedState(): SavedState | null {
@@ -43,6 +46,9 @@ function loadSavedState(): SavedState | null {
     if (!parsed.step || !parsed.scores || !Array.isArray(parsed.shuffledQuestions)) return null;
     // answerHistory is optional for forward-compat with older blobs — default to empty.
     if (!Array.isArray(parsed.answerHistory)) parsed.answerHistory = [];
+    // surveyStartedAt is optional for forward-compat. A resume from a pre-field
+    // blob will report null duration on completion — that's accepted.
+    if (typeof parsed.surveyStartedAt !== 'number') parsed.surveyStartedAt = null;
     return parsed as SavedState;
   } catch {
     return null;
@@ -85,6 +91,10 @@ export function useSurvey() {
   // Ordered list of aptitudes the student has awarded, one per answered question.
   // Enables goBack() to rewind scores without recomputing from scratch.
   const [answerHistory, setAnswerHistory] = useState<Aptitude[]>([]);
+  // Wall-clock ms when the student hit "Start" — used to compute completion time
+  // for the analytics payload. Kept in state (not a ref) so it survives
+  // sessionStorage hydration when a student resumes after closing the tab.
+  const [surveyStartedAt, setSurveyStartedAt] = useState<number | null>(null);
 
   const currentQuestions = shuffledQuestions;
 
@@ -125,6 +135,7 @@ export function useSurvey() {
       setScores(saved.scores);
       setShuffledQuestions(saved.shuffledQuestions);
       setAnswerHistory(saved.answerHistory);
+      setSurveyStartedAt(saved.surveyStartedAt);
       setStep(saved.step);
     }
     hydratedRef.current = true;
@@ -152,12 +163,13 @@ export function useSurvey() {
         scores,
         shuffledQuestions,
         answerHistory,
+        surveyStartedAt,
       };
       window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(blob));
     } catch {
       // Storage full or disabled — degrade silently.
     }
-  }, [step, themeKey, name, ageGroup, currentQuestionIndex, scores, shuffledQuestions, answerHistory]);
+  }, [step, themeKey, name, ageGroup, currentQuestionIndex, scores, shuffledQuestions, answerHistory, surveyStartedAt]);
 
   const startSurvey = () => {
     if (!name || !ageGroup) return;
@@ -171,6 +183,7 @@ export function useSurvey() {
     setAnswerHistory([]);
     setScores({ ...INITIAL_SCORES });
     setCurrentQuestionIndex(0);
+    setSurveyStartedAt(Date.now());
     setStep('survey');
   };
 
@@ -186,7 +199,12 @@ export function useSurvey() {
       for (const [a, s] of Object.entries(newScores)) {
         if (s > max) { max = s; topApt = a as Aptitude; }
       }
-      trackCompletion(name, ageGroup, topApt, themeKey);
+      // Duration is null for resumes from a pre-duration blob; we prefer to log
+      // nothing over logging a misleading short time.
+      const durationSec = surveyStartedAt !== null
+        ? Math.max(1, Math.round((Date.now() - surveyStartedAt) / 1000))
+        : null;
+      trackCompletion(name, ageGroup, topApt, themeKey, durationSec);
       setStep('results');
     }
   };
@@ -223,6 +241,7 @@ export function useSurvey() {
     setScores({ ...INITIAL_SCORES });
     setShuffledQuestions(QUESTIONS['jrHigh']);
     setAnswerHistory([]);
+    setSurveyStartedAt(null);
     // Clear URL params
     window.history.replaceState({}, '', window.location.pathname);
     setStep('onboarding');

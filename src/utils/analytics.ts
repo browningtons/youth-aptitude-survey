@@ -6,7 +6,8 @@ export function trackCompletion(
   name: string,
   ageGroup: AgeGroup,
   aptitude: Aptitude,
-  theme: Theme
+  theme: Theme,
+  durationSec: number | null
 ) {
   if (!SHEETS_WEBHOOK_URL) return;
 
@@ -18,7 +19,10 @@ export function trackCompletion(
     ageGroup,
     aptitude,
     theme,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    // Null when we couldn't measure (e.g. resume from a pre-duration save);
+    // the sheet gets a blank cell rather than a misleading zero.
+    durationSec
   };
 
   // Fire-and-forget — no-cors needed for Google Apps Script redirects
