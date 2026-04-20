@@ -1,13 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
-import { RefreshCcw, TrendingUp, Trophy, Palette, Users } from 'lucide-react';
+import { RefreshCcw, TrendingUp, Trophy, Palette, Users, Calendar } from 'lucide-react';
 import type { Aptitude, AnalyticsData, ThemeStyles } from '../types';
 import { fetchAnalytics } from '../utils/fetchAnalytics';
 import { useI18n } from '../i18n';
+
+// How often to silently re-poll the Sheets webhook during fair demo.
+// 30s is the sweet spot: judges see the "Today" tile tick upward within
+// a few questions of the last student finishing, without hammering the script.
+const REFRESH_INTERVAL_MS = 30_000;
+
+function todayKey(): string {
+  // Apps Script emits YYYY-MM-DD in the local TZ of the sheet, so match that.
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function formatTime(d: Date): string {
+  return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+}
 
 const APTITUDE_COLORS: Record<string, string> = {
   Builder: '#f59e0b',
@@ -36,21 +54,42 @@ export default function Dashboard({ t }: Props) {
   const { t: tr } = useI18n();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  // Tracks whether we've already shown data at least once — subsequent
+  // fetches are "refresh" (no full-screen spinner) rather than "initial load".
+  const hasLoadedRef = useRef(false);
 
-  const loadData = async () => {
-    setLoading(true);
-    setError(false);
+  const loadData = async (isRefresh = false) => {
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     const result = await fetchAnalytics();
     if (result) {
       setData(result);
-    } else {
+      setError(false);
+      setLastUpdated(new Date());
+      hasLoadedRef.current = true;
+    } else if (!hasLoadedRef.current) {
+      // Only surface the error state if we've never successfully loaded.
+      // A transient failure mid-poll shouldn't blank out a working dashboard.
       setError(true);
     }
     setLoading(false);
+    setRefreshing(false);
   };
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData(false);
+    const id = window.setInterval(() => {
+      loadData(true);
+    }, REFRESH_INTERVAL_MS);
+    return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) {
     return (
@@ -69,7 +108,7 @@ export default function Dashboard({ t }: Props) {
           {error ? tr('dashboard.connectError') : tr('dashboard.noDataDesc')}
         </p>
         {error && (
-          <button onClick={loadData} className={`px-6 py-2 text-sm font-bold ${t.buttonPrimary}`}>
+          <button onClick={() => loadData(false)} className={`px-6 py-2 text-sm font-bold ${t.buttonPrimary}`}>
             {tr('dashboard.retry')}
           </button>
         )}
@@ -104,12 +143,27 @@ export default function Dashboard({ t }: Props) {
   const topTheme = themeData.length > 0
     ? themeData.reduce((a, b) => a.value > b.value ? a : b).name
     : '—';
+  const today = todayKey();
+  const todayCount = data.byDate.find(d => d.date === today)?.count ?? 0;
 
   return (
     <div className="space-y-8">
+      {/* Live heartbeat — signals judges that the board is polling */}
+      <div className="flex items-center justify-end gap-2 text-xs font-medium opacity-60">
+        <span className="relative flex h-2 w-2">
+          <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${refreshing ? 'animate-ping bg-green-400' : 'bg-green-500'}`} />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+        </span>
+        <span>
+          {tr('dashboard.live')}
+          {lastUpdated && ` · ${tr('dashboard.lastUpdated')} ${formatTime(lastUpdated)}`}
+        </span>
+      </div>
+
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <StatCard t={t} label={tr('dashboard.totalSubmissions')} value={String(data.total)} icon={<Users className="w-5 h-5" />} />
+        <StatCard t={t} label={tr('dashboard.today')} value={String(todayCount)} icon={<Calendar className="w-5 h-5" />} pulse={todayCount > 0} />
         <StatCard t={t} label={tr('dashboard.topAptitude')} value={topAptitude} icon={<Trophy className="w-5 h-5" />} color={APTITUDE_COLORS[topAptitude]} />
         <StatCard t={t} label={tr('dashboard.mostUsedTheme')} value={topTheme} icon={<Palette className="w-5 h-5" />} color={THEME_COLORS[topTheme]} />
       </div>
@@ -235,9 +289,15 @@ export default function Dashboard({ t }: Props) {
   );
 }
 
-function StatCard({ t, label, value, icon, color }: { t: ThemeStyles; label: string; value: string; icon: React.ReactNode; color?: string }) {
+function StatCard({ t, label, value, icon, color, pulse }: { t: ThemeStyles; label: string; value: string; icon: React.ReactNode; color?: string; pulse?: boolean }) {
   return (
-    <div className={`p-6 rounded-2xl border border-current/10 bg-current/5 text-center`}>
+    <div className={`p-6 rounded-2xl border border-current/10 bg-current/5 text-center relative overflow-hidden`}>
+      {pulse && (
+        <span className="absolute top-2 right-2 flex h-2 w-2" aria-hidden="true">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+        </span>
+      )}
       <div className="flex items-center justify-center gap-2 mb-3">
         <span className={`opacity-50 ${t.iconColor}`}>{icon}</span>
         <p className="text-xs font-bold uppercase tracking-wider opacity-50">{label}</p>
