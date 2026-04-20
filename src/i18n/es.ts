@@ -92,12 +92,12 @@ const es: Record<string, string> = {
   "dashboard.themeDistribution": "Distribución de Temas",
 
   // Aptitudes
-  "aptitude.Builder": "El Constructor",
-  "aptitude.Thinker": "El Pensador",
-  "aptitude.Creator": "El Creador",
-  "aptitude.Helper": "El Ayudante",
-  "aptitude.Persuader": "El Persuasor",
-  "aptitude.Organizer": "El Organizador",
+  "aptitude.Builder": "Constructor",
+  "aptitude.Thinker": "Pensador",
+  "aptitude.Creator": "Creador",
+  "aptitude.Helper": "Ayudante",
+  "aptitude.Persuader": "Persuasor",
+  "aptitude.Organizer": "Organizador",
 
   "aptitude.Builder.desc": "Eres un solucionador de problemas práctico y activo. Disfrutas trabajar con herramientas, maquinaria, plantas o animales. En lugar de solo hablar de teorías, prefieres actuar y te encanta ver resultados tangibles y reales de tu arduo trabajo.",
   "aptitude.Thinker.desc": "Te impulsa la curiosidad y un profundo deseo de entender cómo funciona el mundo. Te encanta analizar datos, resolver rompecabezas complejos e investigar. Eres lógico, preciso y disfrutas los desafíos intelectuales más que cualquier otra cosa.",

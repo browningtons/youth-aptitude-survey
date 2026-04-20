@@ -3,7 +3,7 @@ import type { Aptitude, AptitudeInfo } from '../types';
 
 export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
   Builder: {
-    name: "The Builder",
+    name: "Builder",
     icon: Wrench,
     description: "You are a practical, hands-on problem solver. You enjoy working with tools, machinery, plants, or animals. Instead of just talking about theories, you prefer to take action and love seeing tangible, real-world results from your hard work.",
     strengths: ["Practicality", "Mechanical Ability", "Physical Coordination", "Problem Solving"],
@@ -139,7 +139,7 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
     }
   },
   Thinker: {
-    name: "The Thinker",
+    name: "Thinker",
     icon: Brain,
     description: "You are driven by curiosity and a deep desire to understand how the world works. You love analyzing data, solving complex puzzles, and conducting research. You are logical, precise, and enjoy intellectual challenges more than anything else.",
     strengths: ["Analytical Thinking", "Observation Skills", "Logic", "Scientific Reasoning"],
@@ -275,7 +275,7 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
     }
   },
   Creator: {
-    name: "The Creator",
+    name: "Creator",
     icon: Palette,
     description: "You are highly expressive, original, and independent. You see the world as a canvas and love bringing new ideas to life through art, writing, music, performance, or design. You value freedom and creativity over strict rules and routines.",
     strengths: ["Imagination", "Innovation", "Self-Expression", "Adaptability"],
@@ -411,7 +411,7 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
     }
   },
   Helper: {
-    name: "The Helper",
+    name: "Helper",
     icon: HeartHandshake,
     description: "You are deeply empathetic and thrive on supporting, teaching, and healing others. You are an excellent communicator who values human connection. Your ultimate goal is usually making a positive, lasting impact on your community and the people around you.",
     strengths: ["Empathy", "Communication", "Patience", "Teamwork"],
@@ -547,7 +547,7 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
     }
   },
   Persuader: {
-    name: "The Persuader",
+    name: "Persuader",
     icon: Megaphone,
     description: "You are a natural-born leader and motivator. You enjoy taking risks, starting new projects, and persuading others to achieve a shared goal. You are confident, energetic, and thrive in fast-paced environments where you can take charge.",
     strengths: ["Leadership", "Public Speaking", "Negotiation", "Self-Confidence"],
@@ -683,7 +683,7 @@ export const APTITUDE_DETAILS: Record<Aptitude, AptitudeInfo> = {
     }
   },
   Organizer: {
-    name: "The Organizer",
+    name: "Organizer",
     icon: ClipboardList,
     description: "You are the glue that holds systems together. You value order, accuracy, and predictability. You are incredibly detail-oriented and excel at managing data, creating routines, and coordinating complex logistics that keep everything running smoothly.",
     strengths: ["Organization", "Attention to Detail", "Reliability", "Time Management"],

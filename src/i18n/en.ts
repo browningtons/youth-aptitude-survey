@@ -92,12 +92,12 @@ const en: Record<string, string> = {
   "dashboard.themeDistribution": "Theme Distribution",
 
   // Aptitudes
-  "aptitude.Builder": "The Builder",
-  "aptitude.Thinker": "The Thinker",
-  "aptitude.Creator": "The Creator",
-  "aptitude.Helper": "The Helper",
-  "aptitude.Persuader": "The Persuader",
-  "aptitude.Organizer": "The Organizer",
+  "aptitude.Builder": "Builder",
+  "aptitude.Thinker": "Thinker",
+  "aptitude.Creator": "Creator",
+  "aptitude.Helper": "Helper",
+  "aptitude.Persuader": "Persuader",
+  "aptitude.Organizer": "Organizer",
 
   "aptitude.Builder.desc": "You are a practical, hands-on problem solver. You enjoy working with tools, machinery, plants, or animals. Instead of just talking about theories, you prefer to take action and love seeing tangible, real-world results from your hard work.",
   "aptitude.Thinker.desc": "You are driven by curiosity and a deep desire to understand how the world works. You love analyzing data, solving complex puzzles, and conducting research. You are logical, precise, and enjoy intellectual challenges more than anything else.",
