@@ -60,6 +60,9 @@ const es: Record<string, string> = {
   "results.copied": "¡Copiado!",
   "results.scanToShare": "Escanear para Compartir",
   "results.scanCaption": "Escanea este código para ver estos resultados",
+  "results.idleTitle": "¿Sigues ahí?",
+  "results.idleDesc": "Reiniciando para el siguiente estudiante en {seconds}s.",
+  "results.idleKeep": "Seguir viendo",
 
   // Admin
   "admin.back": "Volver al Inicio",

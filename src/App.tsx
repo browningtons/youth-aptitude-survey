@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { THEMES } from './data/themes';
 import { useSurvey } from './hooks/useSurvey';
 import { useI18n } from './i18n';
@@ -5,7 +6,10 @@ import ThemeSelect from './components/ThemeSelect';
 import Onboarding from './components/Onboarding';
 import Survey from './components/Survey';
 import Results from './components/Results';
-import Admin from './components/Admin';
+
+// Admin pulls in Dashboard, Poster, recharts chart types that students never
+// see — lazy so the initial iPad download stays small.
+const Admin = lazy(() => import('./components/Admin'));
 
 export default function App() {
   const survey = useSurvey();
@@ -67,10 +71,12 @@ export default function App() {
         )}
 
         {survey.step === 'admin' && (
-          <Admin
-            t={t}
-            onBack={() => survey.setStep('onboarding')}
-          />
+          <Suspense fallback={<div className="opacity-60 text-sm font-medium p-8">Loading…</div>}>
+            <Admin
+              t={t}
+              onBack={() => survey.setStep('onboarding')}
+            />
+          </Suspense>
         )}
       </main>
 

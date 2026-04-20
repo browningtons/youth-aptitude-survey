@@ -1,14 +1,20 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { User, Rocket, Sparkles, RefreshCcw, Download, Share2, QrCode, FileText, BookOpen, Users, Zap, Compass, ChevronDown } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import confetti from 'canvas-confetti';
 import type { AgeGroup, Aptitude, Theme, ThemeStyles } from '../types';
 import type { RankedAptitude } from '../hooks/useSurvey';
 import { APTITUDE_DETAILS } from '../data/aptitudes';
 import { handleDownload } from '../utils/download';
-import { generatePDF } from '../utils/pdf';
-import QRModal from './QRModal';
 import { useI18n } from '../i18n';
+
+// QRModal ships qrcode.react — only render on demand when the student taps Share.
+const QRModal = lazy(() => import('./QRModal'));
+
+// Kiosk mode: if the iPad sits on the results screen with nobody touching it
+// for this long, bounce back to onboarding so the next student gets a fresh
+// start. Any click, tap, key, or scroll counts as "still here" and resets it.
+const KIOSK_IDLE_MS = 90_000;
+const KIOSK_WARN_MS = 15_000;
 
 const CHART_COLORS: Record<Aptitude, string> = {
   Builder: '#f59e0b',
@@ -36,6 +42,9 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
   const [showQR, setShowQR] = useState(false);
   const [copied, setCopied] = useState(false);
   const [expandedCareer, setExpandedCareer] = useState<number | null>(null);
+  // Seconds remaining before the kiosk auto-resets; null means "not warning yet".
+  const [kioskCountdown, setKioskCountdown] = useState<number | null>(null);
+  const lastActivityRef = useRef<number>(Date.now());
 
   const ranked = getRankedAptitudes();
   const primary = ranked[0];
@@ -51,20 +60,64 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
   }));
 
   // Celebratory burst on mount, colored by the student's primary aptitude.
+  // canvas-confetti is lazy-loaded so students who don't reach results never
+  // download it, and the burst only fires once the module resolves.
   useEffect(() => {
     const primaryColor = CHART_COLORS[primary.aptitude];
     const secondaryColor = CHART_COLORS[secondary.aptitude];
-    confetti({
-      particleCount: 90,
-      spread: 70,
-      startVelocity: 35,
-      origin: { y: 0.3 },
-      colors: [primaryColor, secondaryColor, '#ffffff'],
-      disableForReducedMotion: true,
+    import('canvas-confetti').then(({ default: confetti }) => {
+      confetti({
+        particleCount: 90,
+        spread: 70,
+        startVelocity: 35,
+        origin: { y: 0.3 },
+        colors: [primaryColor, secondaryColor, '#ffffff'],
+        disableForReducedMotion: true,
+      });
+    }).catch(() => {
+      // Missing confetti shouldn't block the results screen.
     });
     // Only fires on initial mount; we intentionally don't refire on re-render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Kiosk idle timer: reset to onboarding after KIOSK_IDLE_MS without activity.
+  // Suspended while the QR modal is open or during a download — those are
+  // legitimate states where the student may not touch the screen for a bit.
+  useEffect(() => {
+    const resetActivity = () => {
+      lastActivityRef.current = Date.now();
+      setKioskCountdown(null);
+    };
+    const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
+    events.forEach(e => window.addEventListener(e, resetActivity, { passive: true }));
+
+    const tick = window.setInterval(() => {
+      if (showQR || isDownloading) {
+        lastActivityRef.current = Date.now();
+        setKioskCountdown(null);
+        return;
+      }
+      const idle = Date.now() - lastActivityRef.current;
+      if (idle >= KIOSK_IDLE_MS) {
+        onReset();
+      } else if (idle >= KIOSK_IDLE_MS - KIOSK_WARN_MS) {
+        setKioskCountdown(Math.ceil((KIOSK_IDLE_MS - idle) / 1000));
+      } else {
+        setKioskCountdown(null);
+      }
+    }, 1000);
+
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetActivity));
+      window.clearInterval(tick);
+    };
+  }, [showQR, isDownloading, onReset]);
+
+  const dismissKioskWarning = () => {
+    lastActivityRef.current = Date.now();
+    setKioskCountdown(null);
+  };
 
   const hasSecondary = secondary && secondary.score > 0;
   const comboLine = hasSecondary
@@ -82,7 +135,9 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handlePDF = () => {
+  const handlePDF = async () => {
+    // jsPDF is ~150kb — load on demand rather than ship it to every student.
+    const { generatePDF } = await import('../utils/pdf');
     generatePDF(name, ageGroup, ranked);
   };
 
@@ -357,7 +412,35 @@ export default function Results({ t, themeKey, name, ageGroup, getRankedAptitude
         </div>
       </div>
 
-      {showQR && <QRModal t={t} url={getShareableURL()} onClose={() => setShowQR(false)} />}
+      {showQR && (
+        <Suspense fallback={null}>
+          <QRModal t={t} url={getShareableURL()} onClose={() => setShowQR(false)} />
+        </Suspense>
+      )}
+
+      {kioskCountdown !== null && (
+        <div
+          role="alertdialog"
+          aria-labelledby="kiosk-idle-title"
+          className="fixed bottom-4 right-4 z-50 max-w-xs p-4 rounded-2xl shadow-lg bg-black/90 text-white flex items-start gap-3"
+        >
+          <div className="flex-1">
+            <p id="kiosk-idle-title" className="text-sm font-bold mb-1">
+              {tr('results.idleTitle')}
+            </p>
+            <p className="text-xs opacity-80">
+              {tr('results.idleDesc').replace('{seconds}', String(kioskCountdown))}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={dismissKioskWarning}
+            className="px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-black hover:bg-white/90 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+          >
+            {tr('results.idleKeep')}
+          </button>
+        </div>
+      )}
     </>
   );
 }
