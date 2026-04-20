@@ -29,12 +29,12 @@ export function useSurvey() {
   const [themeKey, setThemeKey] = useState<Theme>(randomTheme);
   const [step, setStep] = useState<Step>('theme_select');
   const [name, setName] = useState('');
-  const [dob, setDob] = useState('');
-  const [ageGroup, setAgeGroup] = useState<AgeGroup>('elementary');
+  // Default to jrHigh — primary audience is Mount Ogden Junior High.
+  const [ageGroup, setAgeGroup] = useState<AgeGroup>('jrHigh');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [scores, setScores] = useState<Record<Aptitude, number>>({ ...INITIAL_SCORES });
   const [isDownloading, setIsDownloading] = useState(false);
-  const [shuffledQuestions, setShuffledQuestions] = useState(QUESTIONS['elementary']);
+  const [shuffledQuestions, setShuffledQuestions] = useState(QUESTIONS['jrHigh']);
 
   const currentQuestions = shuffledQuestions;
 
@@ -59,21 +59,9 @@ export function useSurvey() {
   }, []);
 
   const startSurvey = () => {
-    if (!name || !dob) return;
-    const today = new Date();
-    const birth = new Date(dob);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    let group: AgeGroup;
-    if (age <= 11) group = 'elementary';
-    else if (age >= 12 && age <= 14) group = 'jrHigh';
-    else group = 'highSchool';
-    setAgeGroup(group);
+    if (!name || !ageGroup) return;
     setShuffledQuestions(
-      shuffle(QUESTIONS[group]).map(q => ({
+      shuffle(QUESTIONS[ageGroup]).map(q => ({
         ...q,
         options: shuffle(q.options)
       }))
@@ -92,7 +80,7 @@ export function useSurvey() {
       for (const [a, s] of Object.entries(newScores)) {
         if (s > max) { max = s; topApt = a as Aptitude; }
       }
-      trackCompletion(name, dob, topApt, themeKey);
+      trackCompletion(name, ageGroup, topApt, themeKey);
       setStep('results');
     }
   };
@@ -112,10 +100,10 @@ export function useSurvey() {
 
   const resetSurvey = () => {
     setName('');
-    setDob('');
+    setAgeGroup('jrHigh');
     setCurrentQuestionIndex(0);
     setScores({ ...INITIAL_SCORES });
-    setShuffledQuestions(QUESTIONS['elementary']);
+    setShuffledQuestions(QUESTIONS['jrHigh']);
     // Clear URL params
     window.history.replaceState({}, '', window.location.pathname);
     setStep('onboarding');
@@ -125,8 +113,7 @@ export function useSurvey() {
     themeKey, setThemeKey,
     step, setStep,
     name, setName,
-    dob, setDob,
-    ageGroup,
+    ageGroup, setAgeGroup,
     currentQuestionIndex,
     currentQuestions,
     scores,

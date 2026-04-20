@@ -1,21 +1,23 @@
-import { ArrowRight, Info } from 'lucide-react';
-import type { ThemeStyles } from '../types';
+import { ArrowRight, CheckCircle2, Info } from 'lucide-react';
+import type { AgeGroup, ThemeStyles } from '../types';
 import { useI18n, LanguageToggle } from '../i18n';
 import FlowIndicator from './FlowIndicator';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.png`;
 
+const AGE_GROUPS: AgeGroup[] = ['elementary', 'jrHigh', 'highSchool'];
+
 interface Props {
   t: ThemeStyles;
   name: string;
   setName: (v: string) => void;
-  dob: string;
-  setDob: (v: string) => void;
+  ageGroup: AgeGroup;
+  setAgeGroup: (v: AgeGroup) => void;
   onStart: () => void;
   onAdmin: () => void;
 }
 
-export default function Onboarding({ t, name, setName, dob, setDob, onStart, onAdmin }: Props) {
+export default function Onboarding({ t, name, setName, ageGroup, setAgeGroup, onStart, onAdmin }: Props) {
   const { t: tr } = useI18n();
 
   return (
@@ -54,22 +56,31 @@ export default function Onboarding({ t, name, setName, dob, setDob, onStart, onA
             autoComplete="given-name"
             className={`w-full p-4 outline-none transition-all focus:ring-2 focus:ring-current ${t.input}`}
           />
+          <p className="text-xs opacity-60 mt-2 pl-2">{tr('onboarding.nameHint')}</p>
         </div>
         <div>
-          <label htmlFor="student-dob" className="block text-sm font-semibold mb-2 opacity-90 pl-2">{tr('onboarding.dobLabel')}</label>
-          <input
-            id="student-dob"
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            className={`w-full p-4 outline-none transition-all focus:ring-2 focus:ring-current ${t.input}`}
-          />
+          <span id="age-group-label" className="block text-sm font-semibold mb-2 opacity-90 pl-2">{tr('onboarding.ageGroupLabel')}</span>
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-labelledby="age-group-label">
+            {AGE_GROUPS.map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setAgeGroup(key)}
+                role="radio"
+                aria-checked={ageGroup === key}
+                className={`p-3 text-sm font-semibold flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-current focus:ring-offset-2 ${t.buttonOption} ${ageGroup === key ? 'ring-2 ring-current ring-offset-2 ring-offset-transparent' : ''}`}
+              >
+                {ageGroup === key && <CheckCircle2 className={`w-4 h-4 ${t.iconColor}`} aria-hidden="true" />}
+                <span>{tr(`survey.ageGroup.${key}`)}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       <button
         onClick={onStart}
-        disabled={!name || !dob}
+        disabled={!name || !ageGroup}
         className={`w-full py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-current focus:ring-offset-2 ${t.buttonPrimary}`}
       >
         {tr('onboarding.start')} <ArrowRight className="w-5 h-5" aria-hidden="true" />

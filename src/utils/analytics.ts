@@ -1,18 +1,21 @@
-import type { Aptitude, Theme } from '../types';
+import type { AgeGroup, Aptitude, Theme } from '../types';
 
 const SHEETS_WEBHOOK_URL = import.meta.env.VITE_SHEETS_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbwA2bTUr03lF4CWaJoitwU5UlfQ120Bp-UfFLPbWltbtZwboNcygR5ckKakoGTQjKA/exec';
 
 export function trackCompletion(
   name: string,
-  dob: string,
+  ageGroup: AgeGroup,
   aptitude: Aptitude,
   theme: Theme
 ) {
   if (!SHEETS_WEBHOOK_URL) return;
 
+  // Privacy: never ship the full name or DOB off-device. First initial only.
+  const initial = (name.trim().charAt(0) || '').toUpperCase();
+
   const payload = {
-    name,
-    dob,
+    initial,
+    ageGroup,
     aptitude,
     theme,
     timestamp: new Date().toISOString()

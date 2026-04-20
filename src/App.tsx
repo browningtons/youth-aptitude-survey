@@ -33,8 +33,8 @@ export default function App() {
             t={t}
             name={survey.name}
             setName={survey.setName}
-            dob={survey.dob}
-            setDob={survey.setDob}
+            ageGroup={survey.ageGroup}
+            setAgeGroup={survey.setAgeGroup}
             onStart={survey.startSurvey}
             onAdmin={() => survey.setStep('admin')}
           />

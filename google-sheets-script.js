@@ -1,9 +1,16 @@
 /**
  * Google Apps Script — Deploy as Web App to receive survey completions.
  *
+ * Schema (privacy-first — no full names, no DOB):
+ *   Column A: Initial      (first letter of first name only, uppercased)
+ *   Column B: Age Group    (elementary | jrHigh | highSchool — chosen by student)
+ *   Column C: Timestamp    (ISO 8601)
+ *   Column D: Aptitude     (top RIASEC-inspired profile)
+ *   Column E: Theme        (visual skin key)
+ *
  * Setup:
  * 1. Create a new Google Sheet
- * 2. Add headers in Row 1: Name | Date of Birth | Timestamp | Aptitude | Theme
+ * 2. Add headers in Row 1: Initial | Age Group | Timestamp | Aptitude | Theme
  * 3. Go to Extensions > Apps Script
  * 4. Paste this code and save
  * 5. Click Deploy > New deployment > Web app
@@ -14,6 +21,13 @@
  *    VITE_SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/YOUR_ID/exec
  * 8. For GitHub Pages, add it as a repository secret and pass it
  *    via the workflow, OR hardcode it in analytics.ts if the sheet is non-sensitive.
+ *
+ * Migrating from the old schema?
+ *   The previous schema was: Name | Date of Birth | Timestamp | Aptitude | Theme.
+ *   After pasting this updated script, create a fresh sheet (or overwrite the
+ *   header row) with the new columns above. Old rows will still be counted —
+ *   doGet falls back to computing age group from a DOB in column B if present,
+ *   so the dashboard stays intact during the transition.
  */
 
 function doPost(e) {
@@ -21,8 +35,8 @@ function doPost(e) {
   var data = JSON.parse(e.postData.contents);
 
   sheet.appendRow([
-    data.name || '',
-    data.dob || '',
+    data.initial || '',
+    data.ageGroup || '',
     data.timestamp || new Date().toISOString(),
     data.aptitude || '',
     data.theme || ''
@@ -35,7 +49,7 @@ function doPost(e) {
 
 /**
  * GET handler — returns anonymized, aggregated analytics.
- * No names or dates of birth are sent to the client.
+ * No initials or timestamps are correlated in the client payload.
  */
 function doGet() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -53,10 +67,10 @@ function doGet() {
   var now = new Date();
 
   for (var i = 0; i < rows.length; i++) {
-    var dob = rows[i][1];       // Column B: Date of Birth
-    var timestamp = rows[i][2]; // Column C: Timestamp
-    var aptitude = rows[i][3];  // Column D: Aptitude
-    var theme = rows[i][4];     // Column E: Theme
+    var ageGroupCell = rows[i][1]; // Column B: Age Group (or legacy DOB)
+    var timestamp = rows[i][2];    // Column C: Timestamp
+    var aptitude = rows[i][3];     // Column D: Aptitude
+    var theme = rows[i][4];        // Column E: Theme
 
     // Count by aptitude
     if (aptitude) {
@@ -68,16 +82,27 @@ function doGet() {
       byTheme[theme] = (byTheme[theme] || 0) + 1;
     }
 
-    // Compute age group from DOB (no DOB sent to client)
-    if (dob) {
-      var birth = new Date(dob);
-      var age = now.getFullYear() - birth.getFullYear();
-      var m = now.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
-        age--;
+    // Age group — prefer the string literal; fall back to computing from DOB
+    // for rows written by the previous schema.
+    if (ageGroupCell) {
+      var group = '';
+      if (ageGroupCell === 'elementary' || ageGroupCell === 'jrHigh' || ageGroupCell === 'highSchool') {
+        group = ageGroupCell;
+      } else {
+        // Legacy row: ageGroupCell is a DOB. Compute group from age.
+        var birth = new Date(ageGroupCell);
+        if (!isNaN(birth.getTime())) {
+          var age = now.getFullYear() - birth.getFullYear();
+          var m = now.getMonth() - birth.getMonth();
+          if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
+            age--;
+          }
+          group = age <= 11 ? 'elementary' : (age <= 14 ? 'jrHigh' : 'highSchool');
+        }
       }
-      var group = age <= 11 ? 'elementary' : (age <= 14 ? 'jrHigh' : 'highSchool');
-      byAgeGroup[group] = (byAgeGroup[group] || 0) + 1;
+      if (group) {
+        byAgeGroup[group] = (byAgeGroup[group] || 0) + 1;
+      }
     }
 
     // Count by date (YYYY-MM-DD from timestamp)

@@ -17,7 +17,8 @@ const en: Record<string, string> = {
   "onboarding.subtitle": "Let's find out what kind of thinker you are.",
   "onboarding.nameLabel": "First Name",
   "onboarding.namePlaceholder": "e.g. Alex",
-  "onboarding.dobLabel": "Date of Birth",
+  "onboarding.nameHint": "Only your first initial is saved.",
+  "onboarding.ageGroupLabel": "What grade level are you in?",
   "onboarding.start": "Start Survey",
   "onboarding.admin": "Admin",
 
