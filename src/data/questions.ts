@@ -5,7 +5,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "If you had a completely free afternoon, what would you most want to do?",
       options: [
-        { text: "Build a giant fort or play with Lego blocks", aptitude: "Builder" },
+        { text: "Invite a friend over so nobody is left out", aptitude: "Helper" },
         { text: "Read a book about space, animals, or how things work", aptitude: "Thinker" },
         { text: "Paint, draw, or make up a new game", aptitude: "Creator" },
         { text: "Organize my room or sort my toy collection", aptitude: "Organizer" }
@@ -51,7 +51,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
       text: "If you could have any magical power, which would you choose?",
       options: [
         { text: "The power to talk to animals and control plants", aptitude: "Builder" },
-        { text: "The power to read minds and know every fact", aptitude: "Thinker" },
+        { text: "The power to instantly sort and tidy anything I touch", aptitude: "Organizer" },
         { text: "The power to create illusions and change colors", aptitude: "Creator" },
         { text: "The power to heal injuries and take away sadness", aptitude: "Helper" }
       ]
@@ -178,7 +178,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "Which school club would you most likely join?",
       options: [
-        { text: "The engineering or drone racing club", aptitude: "Builder" },
+        { text: "The peer mentoring or community service club", aptitude: "Helper" },
         { text: "The debate team or model UN", aptitude: "Persuader" },
         { text: "The yearbook committee or event planning squad", aptitude: "Organizer" },
         { text: "The photography or digital media club", aptitude: "Creator" }
@@ -205,7 +205,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "If you were to design a mobile app, what would it do?",
       options: [
-        { text: "A tool that measures physical distances or dimensions", aptitude: "Builder" },
+        { text: "A tool that connects volunteers with neighbors who need help", aptitude: "Helper" },
         { text: "A complex puzzle or brain-training game", aptitude: "Thinker" },
         { text: "A digital canvas for drawing or making music", aptitude: "Creator" },
         { text: "A highly customizable calendar and study planner", aptitude: "Organizer" }
@@ -242,7 +242,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
       text: "At a career fair, which booth do you visit first?",
       options: [
         { text: "The engineering and robotics technology booth", aptitude: "Builder" },
-        { text: "The graphic design and multimedia arts booth", aptitude: "Creator" },
+        { text: "The teaching, counseling, and social work booth", aptitude: "Helper" },
         { text: "The business management and law booth", aptitude: "Persuader" },
         { text: "The accounting and administrative logistics booth", aptitude: "Organizer" }
       ]
@@ -289,7 +289,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
       text: "In a corporate team setting, what is your strongest asset?",
       options: [
         { text: "Analyzing complex data to find the root of a problem", aptitude: "Thinker" },
-        { text: "Thinking outside the box to design creative solutions", aptitude: "Creator" },
+        { text: "Reading the room and making sure every teammate is heard", aptitude: "Helper" },
         { text: "Pitching our ideas to the boss or a client", aptitude: "Persuader" },
         { text: "Managing the timeline and ensuring compliance", aptitude: "Organizer" }
       ]
@@ -342,7 +342,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "Which of these pairs of subjects do you enjoy the most?",
       options: [
-        { text: "Physics & Advanced Calculus", aptitude: "Thinker" },
+        { text: "Psychology & Education", aptitude: "Helper" },
         { text: "Literature & Studio Art", aptitude: "Creator" },
         { text: "Business Management & Debate", aptitude: "Persuader" },
         { text: "Accounting & Statistics", aptitude: "Organizer" }
@@ -360,7 +360,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "If you and your friends created a tech startup, what is your role?",
       options: [
-        { text: "Coding the complex backend algorithms", aptitude: "Thinker" },
+        { text: "Running customer support and listening to user feedback", aptitude: "Helper" },
         { text: "Designing the beautiful user interface and logo", aptitude: "Creator" },
         { text: "Seeking out investors and marketing the app", aptitude: "Persuader" },
         { text: "Doing QA testing, writing documentation, and payroll", aptitude: "Organizer" }
@@ -378,7 +378,7 @@ export const QUESTIONS: Record<AgeGroup, Question[]> = {
     {
       text: "What does your ideal future workspace look like?",
       options: [
-        { text: "Outdoors, or in a workshop filled with tools", aptitude: "Builder" },
+        { text: "A community clinic, classroom, or anywhere I can support people", aptitude: "Helper" },
         { text: "A quiet, state-of-the-art laboratory or library", aptitude: "Thinker" },
         { text: "A vibrant, messy, collaborative art studio", aptitude: "Creator" },
         { text: "A highly structured, clean, and quiet corporate office", aptitude: "Organizer" }
